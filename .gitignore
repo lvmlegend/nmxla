@@ -1,0 +1,13 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Temporary user inputs & test outputs
+raw_user_input.txt
+check_q.py
+inspect_unresolved.py
+
+# OS generated files
+.DS_Store
+Thumbs.db
