@@ -1,80 +1,93 @@
 /* ==========================================================================
-   IMAGEX • 画像処理 - ANIME EDITION STYLESHEET
-   Aesthetic Anime / Manga Inspired UI with Sakura Bloom & Cyber-Tokyo Accents
+   JOJO'S BIZARRE ADVENTURE EDITION • ジョジョの奇妙な冒険
+   Araki Pop-Art Color Palette, Manga Ink Borders, Menacing Aura (ゴゴゴゴ)
    ========================================================================== */
 
 :root {
-    /* Anime Cyber Dark Theme (Default) */
-    --primary: #ff758c;
-    --primary-hover: #ff5277;
-    --primary-glow: rgba(255, 117, 140, 0.45);
-    
-    --accent: #38bdf8;
-    --accent-glow: rgba(56, 189, 248, 0.4);
-    --secondary: #a855f7;
-    --secondary-glow: rgba(168, 85, 247, 0.35);
+    /* JoJo Dark Mode: Golden Wind & Star Platinum */
+    --primary: #ff007f;          /* Menacing Magenta */
+    --primary-hover: #e60073;
+    --primary-glow: rgba(255, 0, 127, 0.55);
 
-    --success: #10b981;
-    --success-bg: rgba(16, 185, 129, 0.18);
-    --danger: #f43f5e;
-    --danger-bg: rgba(244, 63, 94, 0.18);
-    --warning: #fbbf24;
+    --gold: #ffd700;             /* Giorno Golden Experience */
+    --gold-glow: rgba(255, 215, 0, 0.5);
 
-    --bg-body: #0d1124;
-    --bg-surface: #131933;
-    --bg-card: rgba(19, 25, 51, 0.82);
-    --bg-card-hover: rgba(28, 37, 73, 0.9);
-    --bg-pill: rgba(255, 255, 255, 0.08);
-    --border-color: rgba(255, 255, 255, 0.12);
-    --border-highlight: rgba(255, 117, 140, 0.6);
+    --accent: #00f5d4;           /* Star Platinum Emerald/Cyan */
+    --accent-glow: rgba(0, 245, 212, 0.45);
+    --secondary: #9333ea;        /* Hermit Purple */
+
+    --success: #00e676;          /* Emerald Splash */
+    --success-bg: rgba(0, 230, 118, 0.18);
+    --danger: #ff1744;           /* King Crimson Red */
+    --danger-bg: rgba(255, 23, 68, 0.22);
+    --warning: #ffd700;
+
+    --bg-body: #110524;          /* Deep Menacing Violet-Black */
+    --bg-surface: #1b0a38;
+    --bg-card: rgba(27, 10, 56, 0.92);
+    --bg-card-hover: rgba(43, 16, 85, 0.96);
+    --bg-pill: rgba(255, 215, 0, 0.1);
+
+    --border-color: #ffd700;     /* Bold Gold Manga Border */
+    --border-subtle: rgba(255, 215, 0, 0.35);
+    --border-highlight: #ff007f;
+    --ink-shadow: #05010a;
 
     --text-primary: #ffffff;
-    --text-secondary: #cbd5e1;
-    --text-muted: #8492a6;
+    --text-secondary: #e2d4f0;
+    --text-muted: #a78bfa;
 
-    --radius-sm: 10px;
-    --radius-md: 16px;
-    --radius-lg: 22px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
     --radius-full: 9999px;
 
-    --font-main: 'Nunito', 'Outfit', -apple-system, sans-serif;
-    --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 20px rgba(255, 117, 140, 0.12);
-    --transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --font-main: 'Outfit', 'Nunito', 'Inter', sans-serif;
+    --shadow-card: 6px 6px 0px #000000, 0 0 22px rgba(255, 0, 127, 0.25);
+    --shadow-btn: 4px 4px 0px #000000;
+    --transition: all 0.18s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 [data-theme="light"] {
-    /* Sakura Blossom Anime Light Theme */
-    --primary: #ec4899;
-    --primary-hover: #db2777;
-    --primary-glow: rgba(236, 72, 153, 0.3);
-    
-    --accent: #0284c7;
-    --accent-glow: rgba(2, 132, 199, 0.25);
-    --secondary: #9333ea;
+    /* JoJo Light Mode: Morioh Cho Radio (Diamond is Unbreakable) */
+    --primary: #d90479;
+    --primary-hover: #b80065;
+    --primary-glow: rgba(217, 4, 121, 0.35);
+
+    --gold: #eab308;
+    --gold-glow: rgba(234, 179, 8, 0.4);
+
+    --accent: #7e22ce;
+    --accent-glow: rgba(126, 34, 206, 0.3);
+    --secondary: #2563eb;
 
     --success: #059669;
-    --success-bg: rgba(5, 150, 105, 0.14);
-    --danger: #e11d48;
-    --danger-bg: rgba(225, 29, 72, 0.14);
+    --success-bg: rgba(5, 150, 105, 0.16);
+    --danger: #dc2626;
+    --danger-bg: rgba(220, 38, 38, 0.16);
     --warning: #d97706;
 
-    --bg-body: #fdf2f8;
-    --bg-surface: #ffffff;
-    --bg-card: rgba(255, 255, 255, 0.92);
-    --bg-card-hover: rgba(255, 241, 245, 0.98);
-    --bg-pill: rgba(236, 72, 153, 0.08);
-    --border-color: rgba(236, 72, 153, 0.15);
-    --border-highlight: rgba(236, 72, 153, 0.5);
+    --bg-body: #fef08a;          /* Iconic Morioh Yellow Sky */
+    --bg-surface: #fffbeb;
+    --bg-card: #ffffff;
+    --bg-card-hover: #fdf4ff;
+    --bg-pill: rgba(126, 34, 206, 0.1);
 
-    --text-primary: #1e1b4b;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
+    --border-color: #111827;     /* Heavy Manga Black Ink */
+    --border-subtle: #1e1b4b;
+    --border-highlight: #d90479;
+    --ink-shadow: #111827;
 
-    --shadow-card: 0 10px 30px rgba(236, 72, 153, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
+    --text-primary: #111827;
+    --text-secondary: #374151;
+    --text-muted: #6b21a8;
+
+    --shadow-card: 6px 6px 0px #111827;
+    --shadow-btn: 4px 4px 0px #111827;
 }
 
 /* ==========================================================================
-   Base Styles
+   Base & Manga Halftone Background
    ========================================================================== */
 
 * {
@@ -90,16 +103,17 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-image: 
-        radial-gradient(circle at 10% 15%, rgba(255, 117, 140, 0.16) 0%, transparent 45%),
-        radial-gradient(circle at 90% 85%, rgba(56, 189, 248, 0.14) 0%, transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.08) 0%, transparent 60%);
+    background-image:
+        radial-gradient(rgba(255, 0, 127, 0.14) 2px, transparent 2px),
+        radial-gradient(circle at 15% 20%, rgba(255, 0, 127, 0.22) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(255, 215, 0, 0.16) 0%, transparent 45%);
+    background-size: 28px 28px, 100% 100%, 100% 100%;
     background-attachment: fixed;
     line-height: 1.55;
     overflow-x: hidden;
 }
 
-/* Background Sakura canvas */
+/* Menacing Katakana (ゴゴゴゴ) Canvas */
 #sakura-canvas {
     position: fixed;
     top: 0;
@@ -120,20 +134,59 @@ body {
     z-index: 9999;
 }
 
+/* Floating Action SFX Text ("ORA!", "ZA WARUDO!") */
+.jojo-sfx-popup {
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5) rotate(-8deg);
+    font-size: 3.4rem;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.04em;
+    color: var(--gold);
+    text-shadow: 
+        4px 4px 0px #000000,
+        -2px -2px 0px var(--primary),
+        0 0 25px var(--primary-glow);
+    pointer-events: none;
+    z-index: 10000;
+    opacity: 0;
+    white-space: nowrap;
+    animation: jojoSfxBurst 0.85s cubic-bezier(0.17, 0.89, 0.32, 1.49) forwards;
+}
+
+@keyframes jojoSfxBurst {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-15deg); }
+    25% { opacity: 1; transform: translate(-50%, -50%) scale(1.18) rotate(-5deg); }
+    50% { opacity: 1; transform: translate(-48%, -52%) scale(1.05) rotate(-7deg); }
+    100% { opacity: 0; transform: translate(-50%, -75%) scale(1.3) rotate(-3deg); }
+}
+
+/* Time Stop Invert Screen Flash Effect on Wrong Answer */
+body.za-warudo-flash {
+    animation: zaWarudoEffect 0.55s ease-out;
+}
+
+@keyframes zaWarudoEffect {
+    0% { filter: invert(0) hue-rotate(0deg); }
+    20% { filter: invert(1) hue-rotate(180deg) contrast(1.4); }
+    55% { filter: invert(0.85) sepia(1) hue-rotate(240deg); }
+    100% { filter: invert(0) hue-rotate(0deg); }
+}
+
 /* ==========================================================================
-   App Header & Brand
+   App Header & JoJo Emblem
    ========================================================================== */
 
 .app-header {
-    background: var(--bg-card);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-bottom: 2px solid var(--border-color);
+    background: var(--bg-surface);
+    border-bottom: 3px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 100;
-    padding: 0.65rem 1.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 0.7rem 1.5rem;
+    box-shadow: 0 5px 0px var(--ink-shadow);
 }
 
 .header-container {
@@ -148,85 +201,82 @@ body {
 .brand {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
+    gap: 0.9rem;
     cursor: pointer;
     text-decoration: none;
     color: inherit;
 }
 
 .brand-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary), #7e22ce);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
-    box-shadow: 0 0 18px var(--primary-glow);
+    font-size: 1.5rem;
+    border: 2.5px solid var(--gold);
+    box-shadow: 3px 3px 0px #000;
     position: relative;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    animation: avatarFloat 3s infinite ease-in-out;
-}
-
-@keyframes avatarFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+    transform: skewX(-6deg);
 }
 
 .avatar-sparkle {
     position: absolute;
-    top: -4px;
-    right: -4px;
-    font-size: 0.85rem;
-    animation: sparkleSpin 2s infinite linear;
+    top: -8px;
+    right: -8px;
+    font-size: 0.95rem;
+    color: var(--gold);
+    font-weight: 900;
+    text-shadow: 2px 2px 0px #000;
+    animation: menaceShake 0.4s infinite alternate;
 }
 
-@keyframes sparkleSpin {
-    0% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.3) rotate(180deg); }
-    100% { transform: scale(1) rotate(360deg); }
+@keyframes menaceShake {
+    0% { transform: translate(0, 0) rotate(-5deg); }
+    100% { transform: translate(2px, -2px) rotate(5deg); }
 }
 
 .brand-text h1 {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     font-weight: 900;
-    letter-spacing: -0.02em;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-style: italic;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-shadow: 3px 3px 0px #000, -1px -1px 0px var(--primary);
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.45rem;
+}
+
+[data-theme="light"] .brand-text h1 {
+    color: var(--primary);
+    text-shadow: 2px 2px 0px #ffd700;
 }
 
 .anime-sub {
-    font-size: 0.8rem;
-    font-weight: 700;
+    font-size: 0.85rem;
+    font-weight: 900;
     color: var(--accent);
-    -webkit-text-fill-color: var(--accent);
-    letter-spacing: 0.05em;
+    text-shadow: 1px 1px 0px #000;
 }
 
 .brand-text p {
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.78rem;
+    font-weight: 800;
     color: var(--text-secondary);
+    letter-spacing: 0.02em;
 }
 
 .status-indicator {
-    color: #10b981;
-    font-size: 0.7rem;
-    animation: blink 2s infinite;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+    color: var(--gold);
+    font-size: 0.85rem;
 }
 
 /* ==========================================================================
-   Header Audio & Actions
+   Header Stats & Volume Control
    ========================================================================== */
 
 .header-stats {
@@ -240,27 +290,29 @@ body {
     align-items: center;
     gap: 0.4rem;
     background: var(--bg-pill);
-    border: 1.5px solid var(--border-color);
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--radius-full);
+    border: 2px solid var(--border-subtle);
+    padding: 0.35rem 0.9rem;
+    border-radius: var(--radius-sm);
     font-size: 0.85rem;
-    font-weight: 800;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    font-weight: 900;
+    transform: skewX(-6deg);
+    box-shadow: 3px 3px 0px var(--ink-shadow);
 }
 
 .stat-pill.streak {
-    color: #fb923c;
-    border-color: rgba(251, 146, 60, 0.35);
+    color: var(--gold);
+    border-color: var(--gold);
 }
 
 .stat-pill.accuracy {
     color: var(--success);
-    border-color: rgba(16, 185, 129, 0.35);
+    border-color: var(--success);
 }
 
 .pill-label {
     font-size: 0.75rem;
-    color: var(--text-muted);
+    text-transform: uppercase;
+    color: var(--text-secondary);
 }
 
 .header-actions {
@@ -269,21 +321,17 @@ body {
     gap: 0.6rem;
 }
 
-/* Volume Control Box (Chỉnh Âm Lượng To / Nhỏ) */
+/* Volume Control Widget */
 .volume-control-box {
     display: flex;
     align-items: center;
     gap: 0.45rem;
-    background: var(--bg-pill);
-    border: 1.5px solid var(--border-color);
-    border-radius: var(--radius-full);
-    padding: 0.25rem 0.65rem;
-    transition: var(--transition);
-}
-
-.volume-control-box:hover {
-    border-color: var(--border-highlight);
-    box-shadow: 0 0 12px var(--primary-glow);
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 0.25rem 0.7rem;
+    box-shadow: 3px 3px 0px var(--ink-shadow);
+    transform: skewX(-4deg);
 }
 
 .vol-btn {
@@ -295,15 +343,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.15s ease;
-}
-
-.vol-btn:hover {
-    transform: scale(1.15);
 }
 
 .vol-slider-wrap {
-    width: 75px;
+    width: 80px;
     display: flex;
     align-items: center;
 }
@@ -312,9 +355,10 @@ body {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 6px;
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
+    height: 7px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--gold));
+    border: 1px solid #000;
     outline: none;
     cursor: pointer;
 }
@@ -322,66 +366,68 @@ body {
 #volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #ffffff;
-    box-shadow: 0 0 6px var(--primary);
-    border: 2px solid var(--primary);
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    background: var(--gold);
+    border: 2px solid #000;
+    box-shadow: 2px 2px 0px #000;
     cursor: pointer;
-    transition: transform 0.1s ease;
-}
-
-#volume-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.25);
+    transform: rotate(45deg);
 }
 
 .vol-percentage {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: var(--primary);
-    min-width: 30px;
+    font-size: 0.78rem;
+    font-weight: 900;
+    color: var(--gold);
+    min-width: 34px;
     text-align: right;
     font-family: monospace;
 }
 
+[data-theme="light"] .vol-percentage {
+    color: var(--primary);
+}
+
 .icon-btn {
-    background: var(--bg-pill);
-    border: 1.5px solid var(--border-color);
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
     color: var(--text-primary);
     width: 38px;
     height: 38px;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 1rem;
+    font-weight: 900;
+    box-shadow: 3px 3px 0px var(--ink-shadow);
     transition: var(--transition);
 }
 
 .icon-btn:hover {
-    border-color: var(--border-highlight);
-    background: var(--bg-card-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--primary-glow);
+    border-color: var(--primary);
+    background: var(--primary);
+    color: #fff;
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0px var(--ink-shadow);
 }
 
 .icon-btn.active {
-    background: rgba(255, 117, 140, 0.15);
-    border-color: var(--primary);
-    color: var(--primary);
+    background: var(--primary);
+    border-color: var(--gold);
+    color: #fff;
 }
 
 /* ==========================================================================
-   Navigation Tabs
+   Navigation Tabs (Slanted Manga Panels)
    ========================================================================== */
 
 .tabs-wrapper {
-    background: var(--bg-card);
-    backdrop-filter: blur(14px);
-    border-bottom: 2px solid var(--border-color);
-    padding: 0.45rem 1.5rem;
+    background: var(--bg-surface);
+    border-bottom: 3px solid var(--border-color);
+    padding: 0.55rem 1.5rem;
     position: relative;
     z-index: 10;
 }
@@ -391,7 +437,7 @@ body {
     margin: 0 auto;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.65rem;
     overflow-x: auto;
     scrollbar-width: none;
 }
@@ -402,48 +448,53 @@ body {
     align-items: center;
     gap: 0.45rem;
     padding: 0.55rem 1.15rem;
-    border-radius: var(--radius-md);
-    background: transparent;
-    border: 1.5px solid transparent;
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    border: 2px solid var(--border-subtle);
     color: var(--text-secondary);
-    font-size: 0.92rem;
-    font-weight: 800;
+    font-size: 0.9rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
     cursor: pointer;
     white-space: nowrap;
+    transform: skewX(-6deg);
+    box-shadow: 3px 3px 0px var(--ink-shadow);
     transition: var(--transition);
 }
 
 .nav-tab:hover {
     color: var(--text-primary);
-    background: var(--bg-pill);
-    transform: translateY(-1px);
+    border-color: var(--gold);
+    transform: skewX(-6deg) translate(-2px, -2px);
+    box-shadow: 5px 5px 0px var(--ink-shadow);
 }
 
 .nav-tab.active {
-    color: white;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 15px var(--primary-glow);
-    transform: translateY(-2px);
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary), #9333ea);
+    border-color: var(--gold);
+    box-shadow: 4px 4px 0px #000, 0 0 15px var(--primary-glow);
 }
 
 .tab-badge {
-    background: rgba(255, 255, 255, 0.25);
-    padding: 0.1rem 0.5rem;
-    border-radius: var(--radius-full);
+    background: var(--gold);
+    color: #000;
+    padding: 0.05rem 0.45rem;
+    border-radius: 3px;
     font-size: 0.75rem;
+    font-weight: 900;
 }
 
 /* ==========================================================================
-   Anime Mascot Dialogue Bar (Yuki-chan Companion)
+   Stand User Companion Box (Jotaro Kujo / Star Platinum)
    ========================================================================== */
 
 .mascot-dialogue-card {
     background: var(--bg-card);
-    backdrop-filter: blur(16px);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 1rem 1.5rem;
+    border: 3px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.5rem;
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
@@ -454,13 +505,15 @@ body {
 }
 
 .mascot-dialogue-card::before {
-    content: '';
+    content: 'ゴゴゴゴ';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+    right: 15px;
+    bottom: -5px;
+    font-size: 3.2rem;
+    font-weight: 900;
+    color: rgba(255, 0, 127, 0.14);
+    pointer-events: none;
+    font-style: italic;
 }
 
 .mascot-avatar-wrap {
@@ -468,22 +521,19 @@ body {
 }
 
 .mascot-avatar {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(255, 117, 140, 0.2), rgba(56, 189, 248, 0.2));
-    border: 2.5px solid var(--primary);
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, #1e1b4b, var(--primary));
+    border: 3px solid var(--gold);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.6rem;
-    box-shadow: 0 0 15px var(--primary-glow);
-    animation: mascotBounce 2.5s infinite ease-in-out;
-}
-
-@keyframes mascotBounce {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.08) rotate(5deg); }
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--gold);
+    box-shadow: 4px 4px 0px #000;
+    transform: skewX(-5deg);
 }
 
 .mascot-content {
@@ -491,33 +541,41 @@ body {
 }
 
 .mascot-name {
-    font-size: 0.82rem;
-    font-weight: 800;
-    color: var(--primary);
+    font-size: 0.88rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gold);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.25rem;
+    gap: 0.6rem;
+    margin-bottom: 0.3rem;
+}
+
+[data-theme="light"] .mascot-name {
+    color: var(--primary);
 }
 
 .mascot-mood-badge {
-    background: var(--bg-pill);
-    border: 1px solid var(--border-color);
-    padding: 0.1rem 0.5rem;
-    border-radius: var(--radius-full);
+    background: var(--primary);
+    color: #fff;
+    border: 1.5px solid #000;
+    padding: 0.1rem 0.55rem;
+    border-radius: 3px;
     font-size: 0.72rem;
-    color: var(--text-muted);
+    font-weight: 900;
+    transform: skewX(-6deg);
 }
 
 .mascot-speech {
-    font-size: 0.98rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 800;
     color: var(--text-primary);
     line-height: 1.45;
 }
 
 /* ==========================================================================
-   Main Content Layout & Anime Cards
+   Main Content & Manga Question Cards
    ========================================================================== */
 
 .main-content {
@@ -532,14 +590,8 @@ body {
 
 .tab-panel {
     display: none;
-    animation: fadeIn 0.3s ease-out;
 }
 .tab-panel.active { display: block; }
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
 
 .arena-layout {
     display: grid;
@@ -552,18 +604,14 @@ body {
     .arena-layout { grid-template-columns: 1fr; }
 }
 
-/* Anime Card Styling */
 .anime-card {
     background: var(--bg-card);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    border: 3px solid var(--border-color);
+    border-radius: var(--radius-md);
     padding: 1.75rem;
     box-shadow: var(--shadow-card);
     position: relative;
     overflow: hidden;
-    transition: var(--transition);
 }
 
 .anime-card::before {
@@ -572,8 +620,14 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
+    height: 6px;
+    background: repeating-linear-gradient(
+        -45deg,
+        var(--gold),
+        var(--gold) 12px,
+        #000 12px,
+        #000 24px
+    );
 }
 
 .card-top-bar {
@@ -582,6 +636,7 @@ body {
     align-items: center;
     gap: 1rem;
     margin-bottom: 1.25rem;
+    margin-top: 0.25rem;
     flex-wrap: wrap;
 }
 
@@ -589,14 +644,16 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    background: rgba(255, 117, 140, 0.15);
-    color: var(--primary);
-    border: 1.5px solid rgba(255, 117, 140, 0.35);
-    padding: 0.3rem 0.85rem;
-    border-radius: var(--radius-full);
+    background: var(--primary);
+    color: #ffffff;
+    border: 2px solid #000;
+    padding: 0.3rem 0.9rem;
+    border-radius: var(--radius-sm);
     font-size: 0.82rem;
-    font-weight: 800;
-    letter-spacing: 0.02em;
+    font-weight: 900;
+    text-transform: uppercase;
+    transform: skewX(-6deg);
+    box-shadow: 3px 3px 0px #000;
 }
 
 .question-controls-top {
@@ -607,20 +664,19 @@ body {
 
 .progress-strip {
     width: 100%;
-    height: 7px;
-    background: var(--bg-pill);
-    border-radius: 4px;
+    height: 10px;
+    background: #000;
+    border: 2px solid var(--border-subtle);
+    border-radius: 2px;
     margin-bottom: 1.25rem;
     overflow: hidden;
 }
 
 .progress-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
+    background: linear-gradient(90deg, var(--primary), var(--gold), var(--accent));
     width: 0%;
     transition: width 0.3s ease;
-    border-radius: 4px;
-    box-shadow: 0 0 10px var(--primary-glow);
 }
 
 .question-meta {
@@ -628,33 +684,36 @@ body {
     justify-content: space-between;
     font-size: 0.88rem;
     color: var(--text-secondary);
-    margin-bottom: 0.75rem;
-    font-weight: 700;
+    margin-bottom: 0.85rem;
+    font-weight: 800;
 }
 
 .badge-qnum {
-    background: var(--bg-pill);
-    padding: 0.15rem 0.6rem;
-    border-radius: 6px;
-    color: var(--accent);
+    background: var(--gold);
+    color: #000;
+    padding: 0.15rem 0.65rem;
+    border-radius: 3px;
+    font-weight: 900;
+    transform: skewX(-6deg);
+    display: inline-block;
 }
 
 .question-title {
-    font-size: 1.2rem;
-    font-weight: 800;
+    font-size: 1.24rem;
+    font-weight: 900;
     color: var(--text-primary);
-    line-height: 1.6;
+    line-height: 1.55;
     margin-bottom: 1.5rem;
 }
 
 /* ==========================================================================
-   Options List (Kawaii Button Hover & Active)
+   Options List (Stand Attack Choices)
    ========================================================================== */
 
 .options-list {
     display: flex;
     flex-direction: column;
-    gap: 0.9rem;
+    gap: 0.95rem;
     margin-bottom: 1.5rem;
 }
 
@@ -663,115 +722,117 @@ body {
     align-items: flex-start;
     gap: 1rem;
     padding: 1.05rem 1.25rem;
-    background: var(--bg-pill);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    border: 2.5px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
     cursor: pointer;
     transition: var(--transition);
     user-select: none;
     position: relative;
+    box-shadow: 4px 4px 0px var(--ink-shadow);
 }
 
 .option-item:hover:not(.locked) {
     background: var(--bg-card-hover);
-    border-color: var(--primary);
-    transform: translateX(6px) scale(1.01);
-    box-shadow: 0 4px 18px var(--primary-glow);
+    border-color: var(--gold);
+    transform: translate(-3px, -3px) skewX(-2deg);
+    box-shadow: 7px 7px 0px var(--primary);
 }
 
 .option-badge {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     flex-shrink: 0;
-    border-radius: 10px;
-    background: var(--bg-card);
-    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    background: #000;
+    border: 2px solid var(--gold);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    font-size: 0.95rem;
-    color: var(--text-secondary);
-    transition: var(--transition);
+    font-size: 1rem;
+    color: var(--gold);
+    transform: skewX(-6deg);
 }
 
 .option-text {
     flex: 1;
-    font-size: 0.98rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
     line-height: 1.5;
     padding-top: 3px;
 }
 
 /* Option States */
 .option-item.selected {
-    border-color: var(--primary);
-    background: rgba(255, 117, 140, 0.15);
+    border-color: var(--gold);
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 5px 5px 0px var(--gold);
 }
 .option-item.selected .option-badge {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
+    background: var(--gold);
+    color: #000;
 }
 
 .option-item.correct {
     border-color: var(--success) !important;
     background: var(--success-bg) !important;
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3) !important;
+    box-shadow: 5px 5px 0px var(--success) !important;
 }
 .option-item.correct .option-badge {
     background: var(--success) !important;
-    color: white !important;
-    border-color: var(--success) !important;
+    color: #000 !important;
+    border-color: #000 !important;
 }
 
 .option-item.wrong {
     border-color: var(--danger) !important;
     background: var(--danger-bg) !important;
-    box-shadow: 0 0 15px rgba(244, 63, 94, 0.3) !important;
+    box-shadow: 5px 5px 0px var(--danger) !important;
 }
 .option-item.wrong .option-badge {
     background: var(--danger) !important;
-    color: white !important;
-    border-color: var(--danger) !important;
+    color: #fff !important;
+    border-color: #000 !important;
 }
 
 .option-item.dimmed {
-    opacity: 0.55;
+    opacity: 0.5;
 }
 
 /* ==========================================================================
-   Explanation Card
+   Explanation Card ([HEAVEN'S DOOR] Knowledge Reveal)
    ========================================================================== */
 
 .explanation-card {
     display: none;
-    background: rgba(255, 117, 140, 0.08);
-    border: 2px dashed rgba(255, 117, 140, 0.4);
-    border-radius: var(--radius-md);
+    background: rgba(255, 215, 0, 0.08);
+    border: 2.5px solid var(--gold);
+    border-radius: var(--radius-sm);
     padding: 1.25rem;
     margin-bottom: 1.5rem;
-    animation: popIn 0.25s ease-out;
+    box-shadow: 5px 5px 0px #000;
 }
 .explanation-card.show { display: block; }
-
-@keyframes popIn {
-    from { opacity: 0; transform: scale(0.98); }
-    to { opacity: 1; transform: scale(1); }
-}
 
 .explanation-header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-weight: 800;
+    font-weight: 900;
     font-size: 0.95rem;
-    color: var(--primary);
+    text-transform: uppercase;
+    color: var(--gold);
     margin-bottom: 0.5rem;
 }
 
+[data-theme="light"] .explanation-header {
+    color: var(--primary);
+}
+
 .explanation-body {
-    font-size: 0.95rem;
+    font-size: 0.96rem;
+    font-weight: 700;
     color: var(--text-primary);
     line-height: 1.6;
 }
@@ -797,52 +858,59 @@ body {
     justify-content: center;
     gap: 0.5rem;
     padding: 0.7rem 1.4rem;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     font-size: 0.95rem;
-    font-weight: 800;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
     cursor: pointer;
-    border: 2px solid transparent;
+    border: 2.5px solid #000;
+    transform: skewX(-6deg);
+    box-shadow: var(--shadow-btn);
     transition: var(--transition);
 }
 
-.btn:active { transform: translateY(2px); }
+.btn:active {
+    transform: skewX(-6deg) translate(2px, 2px);
+    box-shadow: 1px 1px 0px #000;
+}
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary), #ec4899);
-    color: white;
-    box-shadow: 0 4px 15px var(--primary-glow);
+    background: linear-gradient(135deg, var(--primary), #9333ea);
+    color: #ffffff;
+    border-color: var(--gold);
 }
 .btn-primary:hover {
-    box-shadow: 0 6px 20px var(--primary-glow);
-    transform: translateY(-2px);
+    transform: skewX(-6deg) translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #000, 0 0 15px var(--primary-glow);
 }
 
 .btn-secondary {
-    background: var(--bg-pill);
+    background: var(--bg-surface);
     border-color: var(--border-color);
     color: var(--text-primary);
 }
 .btn-secondary:hover {
-    background: var(--bg-card-hover);
-    border-color: var(--border-highlight);
-    transform: translateY(-2px);
+    background: var(--gold);
+    color: #000;
+    transform: skewX(-6deg) translate(-2px, -2px);
 }
 
 .btn-success {
-    background: linear-gradient(135deg, var(--success), #059669);
-    color: white;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+    background: var(--success);
+    color: #000;
+    border-color: #000;
 }
 
 .btn-danger {
-    background: linear-gradient(135deg, var(--danger), #e11d48);
-    color: white;
-    box-shadow: 0 4px 15px rgba(244, 63, 94, 0.35);
+    background: var(--danger);
+    color: #fff;
+    border-color: #000;
 }
 
 .btn-sm {
-    padding: 0.45rem 0.95rem;
-    font-size: 0.85rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.82rem;
 }
 
 .checkbox-label {
@@ -852,18 +920,17 @@ body {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-weight: 700;
+    font-weight: 800;
 }
 
 /* ==========================================================================
-   Sidebar: Anime Question Matrix
+   Sidebar: Stand Question Matrix
    ========================================================================== */
 
 .anime-sidebar {
     background: var(--bg-card);
-    backdrop-filter: blur(18px);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    border: 3px solid var(--border-color);
+    border-radius: var(--radius-md);
     padding: 1.25rem;
     box-shadow: var(--shadow-card);
     position: sticky;
@@ -881,20 +948,26 @@ body {
 
 .sidebar-title {
     font-size: 1.05rem;
-    font-weight: 800;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--gold);
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
+[data-theme="light"] .sidebar-title {
+    color: var(--primary);
+}
+
 .sidebar-header select, .anime-search select {
-    background: var(--bg-pill);
+    background: var(--bg-surface);
     color: var(--text-primary);
-    border: 1.5px solid var(--border-color);
+    border: 2px solid var(--border-color);
     border-radius: var(--radius-sm);
     padding: 0.35rem 0.65rem;
     font-size: 0.82rem;
-    font-weight: 700;
+    font-weight: 800;
     outline: none;
     cursor: pointer;
 }
@@ -903,7 +976,7 @@ body {
     display: flex;
     gap: 0.75rem;
     font-size: 0.78rem;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--text-secondary);
     flex-wrap: wrap;
 }
@@ -915,15 +988,15 @@ body {
 }
 
 .legend-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #000;
 }
-.legend-dot.unanswered { background: var(--border-color); }
+.legend-dot.unanswered { background: var(--bg-surface); }
 .legend-dot.answered { background: var(--accent); }
 .legend-dot.correct { background: var(--success); }
 .legend-dot.wrong { background: var(--danger); }
-.legend-dot.flagged { background: var(--warning); }
+.legend-dot.flagged { background: var(--gold); }
 
 .matrix-grid {
     display: grid;
@@ -936,12 +1009,12 @@ body {
 
 .matrix-btn {
     aspect-ratio: 1;
-    border-radius: var(--radius-sm);
-    background: var(--bg-pill);
-    border: 1.5px solid var(--border-color);
+    border-radius: 3px;
+    background: var(--bg-surface);
+    border: 2px solid var(--border-subtle);
     color: var(--text-secondary);
     font-size: 0.82rem;
-    font-weight: 800;
+    font-weight: 900;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -951,43 +1024,43 @@ body {
 }
 
 .matrix-btn:hover {
-    border-color: var(--primary);
-    transform: scale(1.15);
+    border-color: var(--gold);
+    background: var(--primary);
+    color: #fff;
+    transform: scale(1.12);
     z-index: 2;
 }
 
 .matrix-btn.current {
-    outline: 2.5px solid var(--accent);
+    outline: 3px solid var(--gold);
     outline-offset: 1px;
 }
 
 .matrix-btn.answered {
     background: var(--accent);
-    color: white;
-    border-color: var(--accent);
+    color: #000;
+    border-color: #000;
 }
 
 .matrix-btn.correct {
     background: var(--success);
-    color: white;
-    border-color: var(--success);
+    color: #000;
+    border-color: #000;
 }
 
 .matrix-btn.wrong {
     background: var(--danger);
-    color: white;
-    border-color: var(--danger);
+    color: #fff;
+    border-color: #000;
 }
 
 .matrix-btn.flagged::after {
-    content: '';
+    content: '★';
     position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--warning);
+    top: -3px;
+    right: -1px;
+    font-size: 0.65rem;
+    color: var(--gold);
 }
 
 /* ==========================================================================
@@ -1006,23 +1079,31 @@ body {
 
 .setup-badge {
     display: inline-block;
-    background: rgba(255, 117, 140, 0.15);
-    color: var(--primary);
-    border: 1.5px solid rgba(255, 117, 140, 0.4);
-    padding: 0.25rem 0.85rem;
-    border-radius: var(--radius-full);
-    font-size: 0.8rem;
+    background: var(--primary);
+    color: #fff;
+    border: 2px solid var(--gold);
+    padding: 0.25rem 0.95rem;
+    border-radius: 3px;
+    font-size: 0.82rem;
     font-weight: 900;
-    margin-bottom: 0.5rem;
+    transform: skewX(-8deg);
+    margin-bottom: 0.6rem;
+    box-shadow: 3px 3px 0px #000;
 }
 
 .setup-header h2 {
-    font-size: 1.9rem;
+    font-size: 2rem;
     font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-shadow: 3px 3px 0px #000;
     margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .setup-header h2 {
+    color: var(--primary);
+    text-shadow: 2px 2px 0px #000;
 }
 
 .setup-grid {
@@ -1033,71 +1114,73 @@ body {
 }
 
 .preset-card {
-    background: var(--bg-pill);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    border: 2.5px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
     padding: 1.25rem;
     text-align: center;
     cursor: pointer;
     transition: var(--transition);
-    position: relative;
+    box-shadow: 4px 4px 0px var(--ink-shadow);
 }
 
 .preset-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px var(--primary-glow);
+    border-color: var(--gold);
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0px var(--primary);
 }
 
 .preset-card.selected {
-    border-color: var(--primary);
-    background: rgba(255, 117, 140, 0.18);
-    box-shadow: 0 0 20px var(--primary-glow);
+    border-color: var(--gold);
+    background: rgba(255, 0, 127, 0.22);
+    box-shadow: 6px 6px 0px var(--gold);
 }
 
 .preset-tag {
-    font-size: 0.72rem;
-    font-weight: 800;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
     color: var(--accent);
     margin-bottom: 0.35rem;
 }
-.preset-tag.hot { color: #f97316; }
-.preset-tag.boss { color: #e11d48; }
+.preset-tag.hot { color: var(--gold); }
+.preset-tag.boss { color: var(--primary); }
 
 .preset-title {
-    font-size: 1.35rem;
+    font-size: 1.45rem;
     font-weight: 900;
     margin-bottom: 0.25rem;
 }
 
 .preset-desc {
     font-size: 0.82rem;
+    font-weight: 700;
     color: var(--text-secondary);
 }
 
 .rules-box {
-    background: var(--bg-pill);
-    border: 1.5px solid var(--border-color);
+    background: var(--bg-surface);
+    border: 2px solid var(--border-color);
     padding: 1.25rem;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     margin-bottom: 2rem;
     font-size: 0.92rem;
     color: var(--text-secondary);
+    box-shadow: 4px 4px 0px var(--ink-shadow);
 }
 
 .rules-box ul {
     padding-left: 1.25rem;
     margin-top: 0.4rem;
-    line-height: 1.6;
+    line-height: 1.65;
 }
 
 .anime-btn-main {
     padding: 0.95rem 2.8rem;
     font-size: 1.15rem;
-    letter-spacing: 0.02em;
 }
 
-/* Exam Result Card */
+/* Result Card */
 .result-card {
     max-width: 720px;
     margin: 2rem auto;
@@ -1106,63 +1189,60 @@ body {
 
 .result-badge-top {
     display: inline-block;
-    background: rgba(255, 117, 140, 0.2);
-    color: var(--primary);
-    border: 1.5px solid var(--primary);
-    padding: 0.25rem 1rem;
-    border-radius: var(--radius-full);
-    font-size: 0.85rem;
+    background: var(--gold);
+    color: #000;
+    border: 2px solid #000;
+    padding: 0.25rem 1.1rem;
+    font-size: 0.9rem;
     font-weight: 900;
+    transform: skewX(-8deg);
     margin-bottom: 0.75rem;
+    box-shadow: 3px 3px 0px #000;
 }
 
 .result-score-circle {
-    width: 150px;
-    height: 150px;
+    width: 155px;
+    height: 155px;
     border-radius: 50%;
     margin: 1.5rem auto;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
+    background: linear-gradient(135deg, var(--primary), #7e22ce);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: white;
-    box-shadow: 0 0 35px var(--primary-glow);
-    border: 4px solid rgba(255, 255, 255, 0.4);
-    animation: scorePulse 3s infinite ease-in-out;
-}
-
-@keyframes scorePulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    color: var(--gold);
+    border: 4px solid var(--gold);
+    box-shadow: 6px 6px 0px #000, 0 0 30px var(--primary-glow);
 }
 
 .score-num {
-    font-size: 2.8rem;
+    font-size: 2.9rem;
     font-weight: 900;
     line-height: 1;
+    text-shadow: 3px 3px 0px #000;
 }
 
 .score-total {
     font-size: 0.95rem;
-    font-weight: 700;
-    opacity: 0.9;
+    font-weight: 800;
+    color: #fff;
 }
 
 .result-badge {
     display: inline-block;
     padding: 0.45rem 1.5rem;
-    border-radius: var(--radius-full);
+    border-radius: 4px;
     font-size: 1.1rem;
     font-weight: 900;
-    letter-spacing: 0.05em;
+    transform: skewX(-6deg);
     margin-bottom: 1.5rem;
+    box-shadow: 4px 4px 0px #000;
 }
 
-.result-badge.excellent { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 2px solid #10b981; }
-.result-badge.good { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 2px solid #0284c7; }
-.result-badge.average { background: rgba(251, 191, 36, 0.2); color: #fbbf24; border: 2px solid #f59e0b; }
-.result-badge.poor { background: rgba(244, 63, 94, 0.2); color: #f43f5e; border: 2px solid #f43f5e; }
+.result-badge.excellent { background: var(--gold); color: #000; border: 2px solid #000; }
+.result-badge.good { background: var(--accent); color: #000; border: 2px solid #000; }
+.result-badge.average { background: var(--primary); color: #fff; border: 2px solid #000; }
+.result-badge.poor { background: var(--danger); color: #fff; border: 2px solid #000; }
 
 .result-stats-grid {
     display: grid;
@@ -1172,23 +1252,24 @@ body {
 }
 
 .result-stat-box {
-    background: var(--bg-pill);
-    border: 1.5px solid var(--border-color);
+    background: var(--bg-surface);
+    border: 2px solid var(--border-color);
     padding: 1.15rem;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
+    box-shadow: 4px 4px 0px var(--ink-shadow);
 }
 
 .result-stat-num {
-    font-size: 1.6rem;
+    font-size: 1.65rem;
     font-weight: 900;
 }
 .result-stat-num.correct { color: var(--success); }
 .result-stat-num.wrong { color: var(--danger); }
-.result-stat-num.time { color: var(--accent); }
+.result-stat-num.time { color: var(--gold); }
 
 .result-stat-label {
     font-size: 0.82rem;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--text-secondary);
     margin-top: 0.25rem;
 }
@@ -1201,7 +1282,7 @@ body {
 }
 
 /* ==========================================================================
-   Chapters Grid
+   Chapters Grid & Glossary
    ========================================================================== */
 
 .chapters-grid {
@@ -1212,21 +1293,21 @@ body {
 
 .chapter-card {
     background: var(--bg-card);
-    backdrop-filter: blur(14px);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    border: 2.5px solid var(--border-color);
+    border-radius: var(--radius-sm);
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 1rem;
+    box-shadow: var(--shadow-card);
     transition: var(--transition);
 }
 
 .chapter-card:hover {
     border-color: var(--primary);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px var(--primary-glow);
+    transform: translate(-4px, -4px);
+    box-shadow: 9px 9px 0px var(--ink-shadow);
 }
 
 .chapter-card-header {
@@ -1236,24 +1317,27 @@ body {
 }
 
 .chapter-number {
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     font-weight: 900;
-    color: var(--primary);
+    color: var(--gold);
     text-transform: uppercase;
 }
 
+[data-theme="light"] .chapter-number { color: var(--primary); }
+
 .chapter-qcount {
-    background: var(--bg-pill);
-    padding: 0.2rem 0.65rem;
-    border-radius: var(--radius-full);
+    background: var(--primary);
+    color: #fff;
+    padding: 0.15rem 0.65rem;
+    border-radius: 3px;
     font-size: 0.78rem;
-    font-weight: 800;
-    color: var(--accent);
+    font-weight: 900;
+    transform: skewX(-6deg);
 }
 
 .chapter-title {
     font-size: 1.15rem;
-    font-weight: 800;
+    font-weight: 900;
     line-height: 1.45;
 }
 
@@ -1263,18 +1347,13 @@ body {
     align-items: center;
     margin-top: auto;
     padding-top: 0.85rem;
-    border-top: 1.5px solid var(--border-color);
+    border-top: 2px solid var(--border-subtle);
 }
-
-/* ==========================================================================
-   Search & Glossary
-   ========================================================================== */
 
 .anime-search {
     background: var(--bg-card);
-    backdrop-filter: blur(16px);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
+    border: 2.5px solid var(--border-color);
+    border-radius: var(--radius-sm);
     padding: 0.75rem 1.25rem;
     display: flex;
     align-items: center;
@@ -1289,7 +1368,7 @@ body {
     color: var(--text-primary);
     font-size: 1.05rem;
     font-family: inherit;
-    font-weight: 700;
+    font-weight: 800;
     width: 100%;
     outline: none;
 }
@@ -1303,30 +1382,34 @@ body {
 
 .glossary-card {
     background: var(--bg-card);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
+    border: 2.5px solid var(--border-color);
+    border-radius: var(--radius-sm);
     padding: 1.25rem;
+    box-shadow: var(--shadow-btn);
     transition: var(--transition);
 }
 
 .glossary-card:hover {
     border-color: var(--primary);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px var(--primary-glow);
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0px var(--ink-shadow);
 }
 
 .glossary-term {
     font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--primary);
+    font-weight: 900;
+    color: var(--gold);
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
+[data-theme="light"] .glossary-term { color: var(--primary); }
+
 .glossary-def {
     font-size: 0.95rem;
+    font-weight: 600;
     color: var(--text-secondary);
     line-height: 1.55;
 }
@@ -1342,8 +1425,8 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(6px);
     z-index: 1000;
     align-items: center;
     justify-content: center;
@@ -1361,40 +1444,57 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0.65rem 0;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-subtle);
     font-size: 0.92rem;
-    font-weight: 700;
+    font-weight: 800;
 }
 
 kbd {
-    background: var(--bg-pill);
-    border: 1.5px solid var(--border-color);
+    background: #000;
+    border: 1.5px solid var(--gold);
     padding: 0.2rem 0.55rem;
-    border-radius: 6px;
+    border-radius: 3px;
     font-family: monospace;
     font-size: 0.85rem;
-    color: var(--accent);
+    color: var(--gold);
 }
 
 .app-footer {
     text-align: center;
     padding: 1.5rem;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    font-weight: 700;
-    border-top: 1.5px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-top: 3px solid var(--border-color);
     margin-top: auto;
     position: relative;
     z-index: 5;
 }
 
-/* Responsive adjustments */
+/* Timer box in Exam */
+.timer-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #000;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    padding: 0.3rem 0.85rem;
+    border-radius: 3px;
+    font-size: 0.95rem;
+    font-weight: 900;
+    font-family: monospace;
+    transform: skewX(-6deg);
+}
+
 @media (max-width: 768px) {
     .header-container { flex-direction: column; align-items: stretch; gap: 0.75rem; }
-    .header-actions { justify-content: space-between; }
+    .header-actions { justify-content: space-between; flex-wrap: wrap; }
     .main-content { padding: 1rem 0.75rem; }
-    .question-card { padding: 1.25rem; }
-    .question-title { font-size: 1.05rem; }
+    .anime-card { padding: 1.25rem; }
+    .question-title { font-size: 1.08rem; }
     #bookmarks-summary-grid { grid-template-columns: 1fr !important; }
     .result-stats-grid { grid-template-columns: 1fr !important; }
     .arena-actions { flex-direction: column; align-items: stretch; }

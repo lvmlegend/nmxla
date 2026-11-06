@@ -1,6 +1,10 @@
 /**
- * IMAGEX • 画像処理 - Main Application Logic (Anime Edition)
- * Comprehensive Practice & Exam Engine with Anime Mascot & Volume Control
+ * JOJO'S BIZARRE ADVENTURE • ジョジョの奇妙な冒険 - Main Logic
+ * Features:
+ * - Floating Menacing Katakana Aura ("ゴゴゴゴ" & "ドドドド") Canvas
+ * - ZA WARUDO! Time-Stop Visual Screen Distortion on Wrong Answer
+ * - On-Screen Manga Action Popups ("ORA ORA!", "DI MOLTO!", "OH MY GOD!")
+ * - Stand Companion Reactions (Jotaro, Giorno, Joseph, Rohan)
  */
 
 // Global State
@@ -30,8 +34,8 @@ const state = {
     bookmarks: new Set(),
     wrongQuestions: new Set(),
     activeTab: 'practice',
-    sakuraEnabled: true,
-    lastNonZeroVolume: 0.6
+    sakuraEnabled: true, // Menacing ゴゴゴゴ Aura enabled
+    lastNonZeroVolume: 0.75
 };
 
 // ==========================================================================
@@ -39,7 +43,6 @@ const state = {
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Load questions data
     if (window.QUESTIONS_DATA && Array.isArray(window.QUESTIONS_DATA)) {
         state.allQuestions = window.QUESTIONS_DATA;
     } else {
@@ -47,21 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // 2. Load LocalStorage
     loadSavedData();
-
-    // 3. Setup Practice Mode
     initPractice();
-
-    // 4. Render Chapters & Glossary
     renderChapters();
     renderGlossary();
     renderSearchBank();
+    initMenacingCanvas();
 
-    // 5. Setup Sakura Petals Animation
-    initSakuraCanvas();
-
-    // 6. Setup Keyboard Listeners & Auto-Next
     setupKeyboardShortcuts();
     const autoNextCheckbox = document.getElementById('auto-next-toggle');
     if (autoNextCheckbox) {
@@ -70,20 +65,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 7. Update Header Stats & Volume Slider
     updateHeaderStats();
     updateBookmarksUI();
     initVolumeUI();
 });
 
 function loadSavedData() {
-    // Theme
     const savedTheme = localStorage.getItem('xla_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     const themeIcon = document.getElementById('theme-icon');
     if (themeIcon) themeIcon.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
 
-    // Sakura
     const savedSakura = localStorage.getItem('xla_sakura');
     if (savedSakura !== null) {
         state.sakuraEnabled = savedSakura === 'true';
@@ -91,25 +83,21 @@ function loadSavedData() {
     const sakuraBtn = document.getElementById('sakura-toggle-btn');
     if (sakuraBtn) sakuraBtn.classList.toggle('active', state.sakuraEnabled);
 
-    // Bookmarks
     try {
         const savedBm = localStorage.getItem('xla_bookmarks');
         if (savedBm) state.bookmarks = new Set(JSON.parse(savedBm));
     } catch (e) {}
 
-    // Wrong Questions
     try {
         const savedWrong = localStorage.getItem('xla_wrong');
         if (savedWrong) state.wrongQuestions = new Set(JSON.parse(savedWrong));
     } catch (e) {}
 
-    // Practice Answers
     try {
         const savedAns = localStorage.getItem('xla_practice_answers');
         if (savedAns) state.practice.answeredMap = JSON.parse(savedAns);
     } catch (e) {}
 
-    // Practice Streak
     try {
         const savedStreak = localStorage.getItem('xla_streak');
         if (savedStreak) state.practice.streak = parseInt(savedStreak) || 0;
@@ -124,13 +112,36 @@ function saveState() {
 }
 
 // ==========================================================================
-// Volume & Audio Controls (To / Nhỏ & Mute)
+// JoJo Visual Action Effects (SFX Popups & ZA WARUDO Screen Invert)
+// ==========================================================================
+
+function spawnJoJoSfx(text) {
+    const el = document.createElement('div');
+    el.className = 'jojo-sfx-popup';
+    el.textContent = text;
+    document.body.appendChild(el);
+    setTimeout(() => {
+        if (el.parentNode) el.parentNode.removeChild(el);
+    }, 900);
+}
+
+function triggerZaWarudoVisual() {
+    document.body.classList.remove('za-warudo-flash');
+    void document.body.offsetWidth; // trigger reflow
+    document.body.classList.add('za-warudo-flash');
+    setTimeout(() => {
+        document.body.classList.remove('za-warudo-flash');
+    }, 600);
+}
+
+// ==========================================================================
+// Volume & Audio Controls
 // ==========================================================================
 
 function initVolumeUI() {
-    const vol = window.soundEngine ? window.soundEngine.volume : 0.6;
+    const vol = window.soundEngine ? window.soundEngine.volume : 0.75;
     const volPct = Math.round(vol * 100);
-    state.lastNonZeroVolume = vol > 0 ? vol : 0.6;
+    state.lastNonZeroVolume = vol > 0 ? vol : 0.75;
 
     const slider = document.getElementById('volume-slider');
     const label = document.getElementById('vol-percentage');
@@ -165,15 +176,13 @@ function toggleMute() {
     const label = document.getElementById('vol-percentage');
 
     if (currentVol > 0 && window.soundEngine.enabled) {
-        // Mute
         state.lastNonZeroVolume = currentVol;
         window.soundEngine.setVolume(0);
         if (slider) slider.value = 0;
         if (label) label.textContent = '0%';
         updateVolumeIcon(0);
     } else {
-        // Unmute to last known volume
-        const restoreVol = state.lastNonZeroVolume > 0 ? state.lastNonZeroVolume : 0.6;
+        const restoreVol = state.lastNonZeroVolume > 0 ? state.lastNonZeroVolume : 0.75;
         window.soundEngine.setVolume(restoreVol);
         const restorePct = Math.round(restoreVol * 100);
         if (slider) slider.value = restorePct;
@@ -187,15 +196,10 @@ function updateVolumeIcon(pct) {
     const iconEl = document.getElementById('sound-icon');
     if (!iconEl) return;
 
-    if (pct === 0) {
-        iconEl.textContent = '🔇';
-    } else if (pct < 35) {
-        iconEl.textContent = '🔈';
-    } else if (pct < 75) {
-        iconEl.textContent = '🔉';
-    } else {
-        iconEl.textContent = '🔊';
-    }
+    if (pct === 0) iconEl.textContent = '🔇';
+    else if (pct < 35) iconEl.textContent = '🔈';
+    else if (pct < 75) iconEl.textContent = '🔉';
+    else iconEl.textContent = '🔊';
 }
 
 // ==========================================================================
@@ -204,7 +208,7 @@ function updateVolumeIcon(pct) {
 
 function switchTab(tabId) {
     if (state.exam.active && tabId !== 'exam') {
-        if (!confirm('Senpai đang trong bài thi. Rời đi sẽ tạm dừng bài thi. Tiếp tục?')) {
+        if (!confirm('Bạn đang trong Đấu Trường Stand! Rời đi sẽ tạm dừng trận đấu. Tiếp tục?')) {
             return;
         }
     }
@@ -230,7 +234,7 @@ function switchTab(tabId) {
 }
 
 // ==========================================================================
-// Practice Mode Logic & Anime Mascot Reactions
+// Practice Mode Logic & JoJo Stand Reactions
 // ==========================================================================
 
 function initPractice(filter = 'all', questionsSubset = null) {
@@ -249,7 +253,7 @@ function initPractice(filter = 'all', questionsSubset = null) {
 function renderPracticeQuestion() {
     const list = state.practice.list;
     if (!list || list.length === 0) {
-        document.getElementById('p-q-title').innerHTML = '<span style="color:var(--text-muted)">Không có câu hỏi nào trong danh mục này.</span>';
+        document.getElementById('p-q-title').innerHTML = '<span style="color:var(--text-muted)">Không có mục tiêu nào trong khu vực này.</span>';
         document.getElementById('p-options-list').innerHTML = '';
         document.getElementById('p-explanation-card').classList.remove('show');
         return;
@@ -258,28 +262,23 @@ function renderPracticeQuestion() {
     const idx = state.practice.currentIndex;
     const q = list[idx];
 
-    // Tags & numbers
-    document.getElementById('p-chapter-tag').textContent = q.chapterName || `Chương ${q.chapterId}`;
+    document.getElementById('p-chapter-tag').textContent = q.chapterName || `Part ${q.chapterId}`;
     document.getElementById('p-q-number').textContent = `Câu ${idx + 1} / ${list.length} (Gốc: Câu ${q.id})`;
 
     const totalAnswered = Object.keys(state.practice.answeredMap).length;
-    document.getElementById('p-q-answered-count').textContent = `Đã làm: ${totalAnswered} / ${state.allQuestions.length}`;
+    document.getElementById('p-q-answered-count').textContent = `Đã hạ: ${totalAnswered} / ${state.allQuestions.length}`;
 
-    // Progress Bar
     const progressPct = ((idx + 1) / list.length) * 100;
     document.getElementById('p-progress-bar').style.width = `${progressPct}%`;
 
-    // Star Button
     const isStarred = state.bookmarks.has(q.id);
     const starIcon = document.getElementById('p-star-icon');
     const starBtn = document.getElementById('p-star-btn');
     if (starIcon) starIcon.textContent = isStarred ? '★' : '☆';
     if (starBtn) starBtn.classList.toggle('active', isStarred);
 
-    // Title
     document.getElementById('p-q-title').textContent = q.question;
 
-    // Options
     const optList = document.getElementById('p-options-list');
     optList.innerHTML = '';
 
@@ -312,13 +311,12 @@ function renderPracticeQuestion() {
         optList.appendChild(optDiv);
     });
 
-    // Explanation Box
     const expCard = document.getElementById('p-explanation-card');
     const expText = document.getElementById('p-explanation-text');
     if (answeredInfo) {
         expCard.classList.add('show');
         expText.innerHTML = `
-            <p><strong>Đáp án chính xác: [${q.answer}]</strong> - ${q.options[q.answer]}</p>
+            <p><strong>ĐÁP ÁN CHUẨN: [${q.answer}]</strong> — ${q.options[q.answer]}</p>
             <p style="margin-top: 0.4rem; color: var(--text-secondary);">${q.explanation || ''}</p>
         `;
     } else {
@@ -342,14 +340,16 @@ function selectPracticeAnswer(q, selectedOpt) {
 
     if (isCorrect) {
         state.practice.streak++;
-        window.soundEngine.playCorrect();
 
-        // High streak celebrations
         if (state.practice.streak > 1 && state.practice.streak % 5 === 0) {
             window.soundEngine.playStreak();
             triggerConfetti();
+            spawnJoJoSfx(`ORA RUSH x${state.practice.streak}!! 🎹🔥`);
             updateMascotMood('streak', state.practice.streak);
         } else {
+            window.soundEngine.playCorrect();
+            const cries = ['ORA ORA!! 👊⭐', 'YES! I AM!! 🔥', 'DI MOLTO!! 🐞✨', 'STAR FINGER!! ⭐'];
+            spawnJoJoSfx(cries[Math.floor(Math.random() * cries.length)]);
             updateMascotMood('correct');
         }
 
@@ -357,6 +357,9 @@ function selectPracticeAnswer(q, selectedOpt) {
     } else {
         state.practice.streak = 0;
         window.soundEngine.playWrong();
+        triggerZaWarudoVisual();
+        const wrongCries = ['ZA WARUDO!! ⏱️🛑', 'OH MY GOD!! 😱', 'HORY SHIIIT!! 💥', 'WRYYYYYY!! 🧛‍♂️'];
+        spawnJoJoSfx(wrongCries[Math.floor(Math.random() * wrongCries.length)]);
         state.wrongQuestions.add(q.id);
         updateMascotMood('wrong');
     }
@@ -371,11 +374,10 @@ function selectPracticeAnswer(q, selectedOpt) {
             if (state.practice.currentIndex < state.practice.list.length - 1) {
                 nextPracticeQuestion();
             }
-        }, 1100);
+        }, 1150);
     }
 }
 
-// Anime Mascot Reactions
 function updateMascotMood(type, extra = null) {
     const avatar = document.getElementById('mascot-avatar-emoji');
     const mood = document.getElementById('mascot-mood');
@@ -383,31 +385,31 @@ function updateMascotMood(type, extra = null) {
     if (!avatar || !speech) return;
 
     if (type === 'correct') {
-        avatar.textContent = '(*≧ω≦*)';
-        mood.textContent = 'Sugoi desu! 🌸';
+        avatar.textContent = '⭐👊';
+        mood.textContent = 'ORA ORA ORA!! ⭐';
         const msgs = [
-            '"Sugoi! Senpai chọn chuẩn đét luôn! Tiếp tục giữ phong độ nào! ✨"',
-            '"Chính xác 100%! Trí nhớ của Senpai tuyệt đỉnh thật đó! 💖"',
-            '"Omedetou! Một điểm cộng to đùng cho Senpai nha! 🌸"'
+            '"ORA ORA ORA!! Chính xác tuyệt đối! Tốc độ phản xạ của ngươi ngang ngửa 『Star Platinum』 đấy!"',
+            '"YES! I AM!! Đòn đánh hoàn hảo! Giorno đang gảy piano ăn mừng cho ngươi kìa! 🐞🎹"',
+            '"DI MOLTO!! Tuyệt vời lắm Stand User, không kẻ địch nào qua mắt được ngươi!"'
         ];
         speech.textContent = msgs[Math.floor(Math.random() * msgs.length)];
     } else if (type === 'wrong') {
-        avatar.textContent = '(；´Д｀)';
-        mood.textContent = 'Đừng nản nha Senpai! 💖';
+        avatar.textContent = '⏱️🧛';
+        mood.textContent = 'ZA WARUDO!! 🛑';
         const msgs = [
-            '"Ôi tiếc quá! Nhưng không sao nè, Senpai hãy xem kỹ phần giải thích cốt lõi ở dưới nhé! 💡"',
-            '"Thất bại là mẹ thành công! Ghi nhớ câu này là lần sau Senpai không bao giờ nhầm nữa! 🌸"',
-            '"Yuki tin Senpai câu sau sẽ trả lời đúng ngay thôi! Ganbatte! ✨"'
+            '"OH MY GOD!! DIO vừa dùng 『The World』 dừng thời gian làm ngươi chọn nhầm rồi! Đọc ngay 『Heaven\'s Door』 bên dưới để phá giải!"',
+            '"Yare Yare Daze... Đừng nóng vội! Hãy nhìn vào định nghĩa gốc bên dưới để ghi nhớ năng lực của câu hỏi này!"',
+            '"HORY SHIIIT!! Bị trúng đòn của Stand địch rồi! Nhưng Giorno sẽ dùng 『Gold Experience』 hồi phục lại cho ngươi ngay!"'
         ];
         speech.textContent = msgs[Math.floor(Math.random() * msgs.length)];
     } else if (type === 'streak') {
-        avatar.textContent = '٩(◕‿◕｡)۶';
-        mood.textContent = `COMBO x${extra}!! 🔥`;
-        speech.textContent = `"YATTA!! Chuỗi ${extra} câu đúng liên tiếp! Quá là ngầu luôn Senpai ơiii!! 🔥✨"`;
+        avatar.textContent = '🐞👑';
+        mood.textContent = `REQUIEM x${extra}!! 🔥`;
+        speech.textContent = `"KOREGA REQUIEM DA!! Chuỗi ${extra} câu đúng liên tiếp! Tiếng đàn Piano 3:45 của Giorno đã vang lên, không ai cản nổi ngươi nữa!! 🎹🔥"`;
     } else if (type === 'exam_done') {
-        avatar.textContent = '(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧';
-        mood.textContent = 'Omedetou! 🏆';
-        speech.textContent = `"Chúc mừng Senpai đã hoàn thành bài thi! Yuki tự hào về Senpai lắm đó! 🌸"`;
+        avatar.textContent = '🏆🎸';
+        mood.textContent = 'ARRIVEDERCI! ◄';
+        speech.textContent = `"Yare Yare... Ngươi đã hoàn thành trận quyết đấu! Một chiến thắng xứng tầm Stand Master thực thụ! ⭐"`;
     }
 }
 
@@ -532,7 +534,7 @@ function filterMatrix() {
 }
 
 // ==========================================================================
-// Exam Mode (Thi Thử Tính Giờ)
+// Exam Mode (Đấu Trường Thời Gian)
 // ==========================================================================
 
 function selectExamPreset(cardElement) {
@@ -563,6 +565,7 @@ function startExam() {
     startExamTimer();
     renderExamQuestion();
     renderExamMatrix();
+    spawnJoJoSfx('STAND PROUD!! ⭐');
     window.soundEngine.playClick();
 }
 
@@ -576,7 +579,7 @@ function startExamTimer() {
 
         if (state.exam.timeRemaining <= 0) {
             clearInterval(state.exam.timerInterval);
-            alert('Hết giờ làm bài! Yuki-chan sẽ tự động chấm điểm cho Senpai nhé!');
+            alert('MADE IN HEAVEN! Thời gian đã hết! Hệ thống sẽ tự động phán quyết điểm số.');
             finishExam();
         }
     }, 1000);
@@ -603,11 +606,11 @@ function renderExamQuestion() {
     const idx = state.exam.currentIndex;
     const q = list[idx];
 
-    document.getElementById('e-chapter-tag').textContent = q.chapterName || `Chương ${q.chapterId}`;
+    document.getElementById('e-chapter-tag').textContent = q.chapterName || `Part ${q.chapterId}`;
     document.getElementById('e-q-number').textContent = `Câu ${idx + 1} / ${list.length}`;
 
     const answeredCount = Object.keys(state.exam.answers).length;
-    document.getElementById('e-q-answered-count').textContent = `Đã làm: ${answeredCount} / ${list.length}`;
+    document.getElementById('e-q-answered-count').textContent = `Đã chọn: ${answeredCount} / ${list.length}`;
 
     const progressPct = ((idx + 1) / list.length) * 100;
     document.getElementById('e-progress-bar').style.width = `${progressPct}%`;
@@ -727,9 +730,9 @@ function confirmSubmitExam() {
     const total = state.exam.questions.length;
     const unanswered = total - answeredCount;
 
-    let msg = `Senpai đã làm ${answeredCount}/${total} câu.`;
-    if (unanswered > 0) msg += ` Còn ${unanswered} câu chưa chọn!`;
-    msg += ' Senpai có chắc muốn nộp bài thi ngay không?';
+    let msg = `Bạn đã tung đòn ${answeredCount}/${total} câu.`;
+    if (unanswered > 0) msg += ` Còn ${unanswered} mục tiêu chưa chọn!`;
+    msg += ' Bạn có chắc muốn kết thúc trận đấu (ARRIVEDERCI) ngay không?';
 
     if (confirm(msg)) finishExam();
 }
@@ -777,19 +780,20 @@ function finishExam() {
     const scoreVal = parseFloat(score);
     if (scoreVal >= 9.0) {
         badge.className = 'result-badge excellent';
-        badge.textContent = 'XUẤT SẮC 🏆';
+        badge.textContent = 'S-RANK: GOLD EXPERIENCE REQUIEM 🏆';
     } else if (scoreVal >= 8.0) {
         badge.className = 'result-badge good';
-        badge.textContent = 'GIỎI 🌟';
+        badge.textContent = 'A-RANK: STAR PLATINUM ⭐';
     } else if (scoreVal >= 6.5) {
         badge.className = 'result-badge average';
-        badge.textContent = 'KHÁ 👍';
+        badge.textContent = 'B-RANK: CRAZY DIAMOND 💎';
     } else {
         badge.className = 'result-badge poor';
-        badge.textContent = 'CẦN CỐ GẮNG 💪';
+        badge.textContent = 'CẦN TU LUYỆN HAMON & STAND! 💪';
     }
 
     updateMascotMood('exam_done');
+    spawnJoJoSfx('◄ TO BE CONTINUED...');
     window.soundEngine.playVictory();
     triggerConfetti();
 }
@@ -835,24 +839,24 @@ function backToExamSetup() {
 }
 
 function confirmExitExam() {
-    if (confirm('Senpai có chắc muốn dừng bài thi và quay lại chọn đề không?')) {
+    if (confirm('Bạn có muốn dùng tuyệt chiêu NIGERUNDAYO (Rút lui) và quay lại chọn đề không?')) {
         backToExamSetup();
     }
 }
 
 // ==========================================================================
-// Chapters Tab
+// Chapters Tab (8 Parts)
 // ==========================================================================
 
 const CHAPTER_DEFS = [
-    { id: 1, name: 'Chương 1: Tổng quan & Khái niệm cơ bản', desc: 'Nhiễu ngẫu nhiên, hệ thống, mức xám, số hóa, điểm ảnh, biến dạng ảnh.' },
-    { id: 2, name: 'Chương 2: Thu nhận & Biểu diễn màu, Định dạng ảnh', desc: 'Mô hình RGB, CMY, HSV, HSL, Vector, Raster, Bayer, 3-CCD, BMP, RAW, TIFF, PCX.' },
-    { id: 3, name: 'Chương 3: Tiền xử lý, Lọc & Nâng cao chất lượng ảnh', desc: 'Lọc trung bình, trung vị, Wiener, đảo, Dãn độ tương phản, Histogram, Phép nhân chập.' },
-    { id: 4, name: 'Chương 4: Phát hiện biên & Hình thái học ảnh', desc: 'Gradient, Sobel, Prewitt, Canny, Laplace, Co/Giãn/Mở/Đóng, Trích biên.' },
-    { id: 5, name: 'Chương 5: Phân vùng ảnh (Segmentation)', desc: 'Ngưỡng, Đẳng điệu, Tam giác, Đối xứng nền, Texture, Tách/Hợp vùng, Phát triển vùng.' },
-    { id: 6, name: 'Chương 6: Nhận dạng ảnh & Phân lớp', desc: 'Có giám sát, Không giám sát, K-means, KNN, ISODATA, Hopfield, Kohonen.' },
-    { id: 7, name: 'Chương 7: Nén dữ liệu ảnh & Chuẩn JPEG', desc: 'RLE, Huffman, LZW, JPEG DCT, Quét Zig-Zag, Kim tự tháp, Fractal.' },
-    { id: 8, name: 'Chuẩn đầu ra & Tác phong học tập', desc: '10 câu hỏi chuẩn mực thái độ, giờ giảng, tự đánh giá và tích lũy kiến thức học phần.' }
+    { id: 1, name: 'Part 1: Tổng quan & Khái niệm cơ bản', desc: 'Nhiễu ngẫu nhiên, hệ thống, mức xám, số hóa, điểm ảnh, biến dạng ảnh.' },
+    { id: 2, name: 'Part 2: Thu nhận & Biểu diễn màu, Định dạng ảnh', desc: 'Mô hình RGB, CMY, HSV, HSL, Vector, Raster, Bayer, 3-CCD, BMP, RAW, TIFF, PCX.' },
+    { id: 3, name: 'Part 3: Tiền xử lý, Lọc & Nâng cao chất lượng ảnh', desc: 'Lọc trung bình, trung vị, Wiener, đảo, Dãn độ tương phản, Histogram, Phép nhân chập.' },
+    { id: 4, name: 'Part 4: Phát hiện biên & Hình thái học ảnh', desc: 'Gradient, Sobel, Prewitt, Canny, Laplace, Co/Giãn/Mở/Đóng, Trích biên.' },
+    { id: 5, name: 'Part 5: Phân vùng ảnh (Segmentation)', desc: 'Ngưỡng, Đẳng điệu, Tam giác, Đối xứng nền, Texture, Tách/Hợp vùng, Phát triển vùng.' },
+    { id: 6, name: 'Part 6: Nhận dạng ảnh & Phân lớp', desc: 'Có giám sát, Không giám sát, K-means, KNN, ISODATA, Hopfield, Kohonen.' },
+    { id: 7, name: 'Part 7: Nén dữ liệu ảnh & Chuẩn JPEG', desc: 'RLE, Huffman, LZW, JPEG DCT, Quét Zig-Zag, Kim tự tháp, Fractal.' },
+    { id: 8, name: 'Part 8: Chuẩn đầu ra & Tác phong học tập', desc: '10 câu hỏi chuẩn mực thái độ, giờ giảng, tự đánh giá và tích lũy kiến thức học phần.' }
 ];
 
 function renderChapters() {
@@ -870,25 +874,25 @@ function renderChapters() {
         card.className = 'chapter-card';
         card.innerHTML = `
             <div class="chapter-card-header">
-                <span class="chapter-number">Chuyên đề ${ch.id}</span>
-                <span class="chapter-qcount">${chQuestions.length} câu</span>
+                <span class="chapter-number">★ JOJO PART ${ch.id}</span>
+                <span class="chapter-qcount">${chQuestions.length} Mục tiêu</span>
             </div>
             <div class="chapter-title">${ch.name}</div>
             <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.4;">${ch.desc}</p>
             
             <div style="margin-top: 0.5rem;">
-                <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">
-                    <span>Tiến độ đúng</span>
+                <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:800; color:var(--gold); margin-bottom:4px;">
+                    <span>Tiến độ Chinh phục</span>
                     <span>${correctInCh.length}/${chQuestions.length} (${pct}%)</span>
                 </div>
-                <div class="progress-strip" style="margin-bottom:0.75rem; height:5px;">
+                <div class="progress-strip" style="margin-bottom:0.75rem; height:7px;">
                     <div class="progress-bar-fill" style="width:${pct}%"></div>
                 </div>
             </div>
 
             <div class="chapter-footer">
                 <button class="btn btn-primary btn-sm" onclick="practiceChapter(${ch.id})">
-                    ⚡ Luyện tập ngay
+                    👊 Xuất kích (ORA!)
                 </button>
             </div>
         `;
@@ -912,11 +916,11 @@ function renderBookmarksTab() {
     document.getElementById('starred-count-val').textContent = starList.length;
 
     if (starList.length === 0) {
-        starContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Chưa có câu hỏi nào được gắn sao.</p>';
+        starContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Chưa có câu hỏi nào được gắn Ngôi Sao Joestar.</p>';
     } else {
         starContainer.innerHTML = '';
         starList.forEach(q => {
-            const item = createQuestionSummaryItem(q, 'starred');
+            const item = createQuestionSummaryItem(q);
             starContainer.appendChild(item);
         });
     }
@@ -926,11 +930,11 @@ function renderBookmarksTab() {
     document.getElementById('wrong-count-val').textContent = wrongList.length;
 
     if (wrongList.length === 0) {
-        wrongContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Tuyệt vời! Senpai chưa làm sai câu nào!</p>';
+        wrongContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">DI MOLTO! Chưa có kẻ địch nào hạ gục được bạn!</p>';
     } else {
         wrongContainer.innerHTML = '';
         wrongList.forEach(q => {
-            const item = createQuestionSummaryItem(q, 'wrong');
+            const item = createQuestionSummaryItem(q);
             wrongContainer.appendChild(item);
         });
     }
@@ -938,13 +942,13 @@ function renderBookmarksTab() {
 
 function createQuestionSummaryItem(q) {
     const div = document.createElement('div');
-    div.style.cssText = 'background:var(--bg-pill); border:1.5px solid var(--border-color); border-radius:var(--radius-sm); padding:0.75rem 1rem; display:flex; justify-content:space-between; align-items:center; gap:0.5rem; cursor:pointer;';
+    div.style.cssText = 'background:var(--bg-surface); border:2px solid var(--border-subtle); border-radius:4px; padding:0.75rem 1rem; display:flex; justify-content:space-between; align-items:center; gap:0.5rem; cursor:pointer; box-shadow: 3px 3px 0px #000;';
     div.innerHTML = `
         <div style="flex:1;">
-            <div style="font-size:0.75rem; color:var(--primary); font-weight:800;">Câu ${q.id} • ${q.chapterName}</div>
-            <div style="font-size:0.92rem; font-weight:700; color:var(--text-primary); margin-top:2px; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${q.question}</div>
+            <div style="font-size:0.75rem; color:var(--gold); font-weight:900;">Câu ${q.id} • ${q.chapterName}</div>
+            <div style="font-size:0.92rem; font-weight:800; color:var(--text-primary); margin-top:2px; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${q.question}</div>
         </div>
-        <button class="btn btn-secondary btn-sm" style="flex-shrink:0;">Luyện câu này</button>
+        <button class="btn btn-secondary btn-sm" style="flex-shrink:0;">Tái đấu</button>
     `;
     div.onclick = () => {
         initPractice('single', [q]);
@@ -958,13 +962,13 @@ function practiceFilterQuestions(filterType) {
     if (filterType === 'wrong') {
         subset = state.allQuestions.filter(q => state.wrongQuestions.has(q.id));
         if (subset.length === 0) {
-            alert('Senpai chưa có câu nào làm sai!');
+            alert('DI MOLTO! Bạn chưa có câu nào làm sai!');
             return;
         }
     } else if (filterType === 'starred') {
         subset = state.allQuestions.filter(q => state.bookmarks.has(q.id));
         if (subset.length === 0) {
-            alert('Senpai chưa gắn sao câu hỏi nào!');
+            alert('Bạn chưa gắn sao câu hỏi nào!');
             return;
         }
     }
@@ -1014,27 +1018,27 @@ function renderSearchBank() {
         card.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
                 <span class="chapter-tag" style="font-size:0.75rem;">Câu ${q.id} • ${q.chapterName}</span>
-                <button class="btn btn-secondary btn-sm" onclick="practiceSingleQuestion(${q.id})">⚡ Luyện câu này</button>
+                <button class="btn btn-secondary btn-sm" onclick="practiceSingleQuestion(${q.id})">👊 Đánh câu này</button>
             </div>
-            <div style="font-size:1.1rem; font-weight:800; margin-bottom:0.75rem; color:var(--text-primary);">${q.question}</div>
+            <div style="font-size:1.1rem; font-weight:900; margin-bottom:0.75rem; color:var(--text-primary);">${q.question}</div>
             
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:0.75rem; font-size:0.92rem; font-weight:600;">
-                <div style="padding:0.5rem 0.75rem; border-radius:8px; background:${q.answer === 'A' ? 'var(--success-bg)' : 'var(--bg-pill)'}; border:1.5px solid ${q.answer === 'A' ? 'var(--success)' : 'transparent'};">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:0.75rem; font-size:0.92rem; font-weight:700;">
+                <div style="padding:0.5rem 0.75rem; border-radius:4px; background:${q.answer === 'A' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:2px solid ${q.answer === 'A' ? 'var(--success)' : 'var(--border-subtle)'};">
                     <strong>A.</strong> ${q.options.A || ''}
                 </div>
-                <div style="padding:0.5rem 0.75rem; border-radius:8px; background:${q.answer === 'B' ? 'var(--success-bg)' : 'var(--bg-pill)'}; border:1.5px solid ${q.answer === 'B' ? 'var(--success)' : 'transparent'};">
+                <div style="padding:0.5rem 0.75rem; border-radius:4px; background:${q.answer === 'B' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:2px solid ${q.answer === 'B' ? 'var(--success)' : 'var(--border-subtle)'};">
                     <strong>B.</strong> ${q.options.B || ''}
                 </div>
-                <div style="padding:0.5rem 0.75rem; border-radius:8px; background:${q.answer === 'C' ? 'var(--success-bg)' : 'var(--bg-pill)'}; border:1.5px solid ${q.answer === 'C' ? 'var(--success)' : 'transparent'};">
+                <div style="padding:0.5rem 0.75rem; border-radius:4px; background:${q.answer === 'C' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:2px solid ${q.answer === 'C' ? 'var(--success)' : 'var(--border-subtle)'};">
                     <strong>C.</strong> ${q.options.C || ''}
                 </div>
-                <div style="padding:0.5rem 0.75rem; border-radius:8px; background:${q.answer === 'D' ? 'var(--success-bg)' : 'var(--bg-pill)'}; border:1.5px solid ${q.answer === 'D' ? 'var(--success)' : 'transparent'};">
+                <div style="padding:0.5rem 0.75rem; border-radius:4px; background:${q.answer === 'D' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:2px solid ${q.answer === 'D' ? 'var(--success)' : 'var(--border-subtle)'};">
                     <strong>D.</strong> ${q.options.D || ''}
                 </div>
             </div>
 
-            <div style="font-size:0.88rem; color:var(--text-secondary); background:rgba(255,117,140,0.06); padding:0.6rem 0.85rem; border-radius:8px; border:1px dashed rgba(255,117,140,0.3);">
-                💡 <strong>Định nghĩa cốt lõi:</strong> ${q.explanation}
+            <div style="font-size:0.88rem; font-weight:700; color:var(--text-secondary); background:rgba(255,215,0,0.08); padding:0.6rem 0.85rem; border-radius:4px; border:1.5px solid var(--gold);">
+                📖 <strong>『Heaven's Door』:</strong> ${q.explanation}
             </div>
         `;
         container.appendChild(card);
@@ -1045,7 +1049,7 @@ function renderSearchBank() {
         moreNote.style.textAlign = 'center';
         moreNote.style.color = 'var(--text-muted)';
         moreNote.style.padding = '1rem';
-        moreNote.textContent = `(Đang hiển thị 100 / ${filtered.length} câu phù hợp. Vui lòng gõ từ khóa chi tiết hơn)`;
+        moreNote.textContent = `(Đang hiển thị 100 / ${filtered.length} câu phù hợp. Hãy nhập từ khóa cụ thể hơn)`;
         container.appendChild(moreNote);
     }
 }
@@ -1095,8 +1099,8 @@ function renderGlossary() {
         card.className = 'glossary-card';
         card.innerHTML = `
             <div class="glossary-term">
-                <span>${item.concept}</span>
-                <button class="icon-btn btn-sm" title="Tìm các câu liên quan trong đề" onclick="searchRelatedQuestion('${item.concept}')">
+                <span>★ ${item.concept}</span>
+                <button class="icon-btn btn-sm" title="Truy tìm câu hỏi liên quan" onclick="searchRelatedQuestion('${item.concept}')">
                     <span>🔍</span>
                 </button>
             </div>
@@ -1143,6 +1147,7 @@ function toggleTheme() {
 
     const themeIcon = document.getElementById('theme-icon');
     if (themeIcon) themeIcon.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+    spawnJoJoSfx('COLOR SHIFT!! 🎨');
     if (window.soundEngine) window.soundEngine.playClick();
 }
 
@@ -1155,7 +1160,7 @@ function closeShortcutsModal() {
 }
 
 function confirmResetProgress() {
-    if (confirm('Senpai có chắc muốn đặt lại toàn bộ tiến trình học (lịch sử làm bài, chuỗi combo, câu sai)? Dữ liệu câu đã gắn sao sẽ được giữ lại.')) {
+    if (confirm('KILLER QUEEN: BITES THE DUST! Bạn có muốn quay ngược thời gian và đặt lại toàn bộ lịch sử làm bài không? (Các câu gắn Sao Joestar vẫn được giữ lại).')) {
         state.practice.answeredMap = {};
         state.practice.streak = 0;
         state.wrongQuestions.clear();
@@ -1165,17 +1170,17 @@ function confirmResetProgress() {
         renderPracticeQuestion();
         renderPracticeMatrix();
         renderChapters();
-        alert('Tiến trình đã được đặt lại thành công!');
+        spawnJoJoSfx('BITES THE DUST!! 💣⏪');
     }
 }
 
 // ==========================================================================
-// Falling Sakura Petals Animation Canvas (🌸)
+// JoJo Menacing Katakana Aura Canvas ("ゴゴゴゴ" & "ドドドド")
 // ==========================================================================
 
-let sakuraAnimationId = null;
+let menacingAnimationId = null;
 
-function initSakuraCanvas() {
+function initMenacingCanvas() {
     const canvas = document.getElementById('sakura-canvas');
     if (!canvas) return;
 
@@ -1188,62 +1193,57 @@ function initSakuraCanvas() {
         height = canvas.height = window.innerHeight;
     });
 
-    const petalCount = 35;
-    const petals = [];
+    const symbols = ['ゴ', 'ゴ', 'ゴ', 'ド', 'ド', '★'];
+    const colors = ['#ff007f', '#ffd700', '#a855f7', '#00f5d4'];
+    const count = 24;
+    const particles = [];
 
-    for (let i = 0; i < petalCount; i++) {
-        petals.push({
+    for (let i = 0; i < count; i++) {
+        particles.push({
             x: Math.random() * width,
-            y: Math.random() * height - height,
-            size: Math.random() * 8 + 7,
-            speedY: Math.random() * 1.4 + 0.8,
-            speedX: Math.random() * 1.5 - 0.7,
-            angle: Math.random() * 360,
-            angleSpeed: (Math.random() - 0.5) * 1.5,
-            opacity: Math.random() * 0.4 + 0.4,
-            sway: Math.random() * 50
+            y: Math.random() * height,
+            size: Math.random() * 20 + 18,
+            speedY: -(Math.random() * 1.1 + 0.5), // float upwards menacingly
+            char: symbols[Math.floor(Math.random() * symbols.length)],
+            color: colors[Math.floor(Math.random() * colors.length)],
+            opacity: Math.random() * 0.35 + 0.15,
+            shakeOffset: Math.random() * 100
         });
-    }
-
-    function drawPetal(p) {
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate((p.angle * Math.PI) / 180);
-        ctx.fillStyle = `rgba(255, 183, 197, ${p.opacity})`;
-
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.bezierCurveTo(-p.size, -p.size, -p.size * 1.2, p.size, 0, p.size * 1.3);
-        ctx.bezierCurveTo(p.size * 1.2, p.size, p.size, -p.size, 0, 0);
-        ctx.fill();
-        ctx.restore();
     }
 
     function animate() {
         if (!state.sakuraEnabled) {
             ctx.clearRect(0, 0, width, height);
-            sakuraAnimationId = requestAnimationFrame(animate);
+            menacingAnimationId = requestAnimationFrame(animate);
             return;
         }
 
         ctx.clearRect(0, 0, width, height);
 
-        petals.forEach(p => {
+        particles.forEach(p => {
             p.y += p.speedY;
-            p.x += Math.sin((p.y + p.sway) * 0.015) * 1.2 + p.speedX;
-            p.angle += p.angleSpeed;
+            // Subtle menacing vibration
+            const jitterX = Math.sin(Date.now() * 0.03 + p.shakeOffset) * 1.8;
+            const jitterY = Math.cos(Date.now() * 0.04 + p.shakeOffset) * 1.2;
 
-            if (p.y > height + 20) {
-                p.y = -20;
+            if (p.y < -40) {
+                p.y = height + 30;
                 p.x = Math.random() * width;
             }
-            if (p.x > width + 20) p.x = -20;
-            if (p.x < -20) p.x = width + 20;
 
-            drawPetal(p);
+            ctx.save();
+            ctx.globalAlpha = p.opacity;
+            ctx.font = `900 italic ${p.size}px 'Outfit', sans-serif`;
+            ctx.fillStyle = p.color;
+            ctx.shadowColor = '#000000';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 3;
+            ctx.shadowOffsetY = 3;
+            ctx.fillText(p.char, p.x + jitterX, p.y + jitterY);
+            ctx.restore();
         });
 
-        sakuraAnimationId = requestAnimationFrame(animate);
+        menacingAnimationId = requestAnimationFrame(animate);
     }
 
     animate();
@@ -1254,11 +1254,12 @@ function toggleSakura() {
     localStorage.setItem('xla_sakura', state.sakuraEnabled.toString());
     const btn = document.getElementById('sakura-toggle-btn');
     if (btn) btn.classList.toggle('active', state.sakuraEnabled);
+    if (state.sakuraEnabled) spawnJoJoSfx('ゴゴゴゴ!!');
     if (window.soundEngine) window.soundEngine.playClick();
 }
 
 // ==========================================================================
-// Confetti Animation Effect
+// Golden Star Confetti Effect
 // ==========================================================================
 
 function triggerConfetti() {
@@ -1270,17 +1271,17 @@ function triggerConfetti() {
     canvas.height = window.innerHeight;
 
     const particles = [];
-    const colors = ['#ff758c', '#38bdf8', '#10b981', '#fbbf24', '#ec4899', '#a855f7', '#ffffff'];
+    const colors = ['#ffd700', '#ff007f', '#00f5d4', '#a855f7', '#ffffff'];
 
-    for (let i = 0; i < 75; i++) {
+    for (let i = 0; i < 80; i++) {
         particles.push({
             x: canvas.width / 2,
             y: canvas.height / 2,
-            r: Math.random() * 6 + 3,
+            r: Math.random() * 7 + 4,
             color: colors[Math.floor(Math.random() * colors.length)],
-            vx: (Math.random() - 0.5) * 18,
-            vy: (Math.random() - 0.7) * 18,
-            gravity: 0.35,
+            vx: (Math.random() - 0.5) * 20,
+            vy: (Math.random() - 0.7) * 20,
+            gravity: 0.38,
             opacity: 1
         });
     }
