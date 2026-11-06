@@ -128,6 +128,16 @@
                     <div class="mascot-speech" id="mascot-speech-text">
                         "Konichiwa Senpai! Yuki sẽ đồng hành cùng Senpai chinh phục 400 câu Xử Lý Ảnh nhé! Ganbatte kudasai! ✨"
                     </div>
+                    <!-- Quick Sound Test Controls -->
+                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.6rem; flex-wrap: wrap;">
+                        <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 800;">🎵 Thử âm thanh mới:</span>
+                        <button class="btn btn-sm" style="background: var(--success-bg); color: var(--success); border: 1.5px solid var(--success); padding: 0.2rem 0.75rem; font-size: 0.78rem; border-radius: var(--radius-full);" onclick="window.soundEngine.playCorrect()" title="Nghe thử âm trả lời Đúng">
+                            <span>🌸</span> Âm Đúng (Sparkle Bell)
+                        </button>
+                        <button class="btn btn-sm" style="background: var(--danger-bg); color: var(--danger); border: 1.5px solid var(--danger); padding: 0.2rem 0.75rem; font-size: 0.78rem; border-radius: var(--radius-full);" onclick="window.soundEngine.playWrong()" title="Nghe thử âm trả lời Sai">
+                            <span>🎈</span> Âm Sai (Cartoon Boing)
+                        </button>
+                    </div>
                 </div>
             </div>
 
