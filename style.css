@@ -1536,6 +1536,229 @@ kbd {
     border-color: var(--danger);
 }
 
+/* ==========================================================================
+   JoJo Eyecatch Scene Transition Curtain & Smooth UI Animations
+   ========================================================================== */
+
+/* Full-screen non-blocking JoJo Diagonal Scene Wipe */
+.scene-transition-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9500;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.scene-transition-overlay.active {
+    opacity: 1;
+}
+
+.scene-wipe-slash {
+    position: absolute;
+    top: -20%;
+    left: -130%;
+    width: 120%;
+    height: 140%;
+    background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.96) 0%,
+        rgba(88, 28, 135, 0.94) 50%,
+        rgba(30, 41, 59, 0.96) 100%
+    );
+    border-left: 4px solid var(--gold);
+    border-right: 4px solid var(--accent);
+    transform: skewX(-18deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.65);
+}
+
+.scene-transition-overlay.active .scene-wipe-slash {
+    animation: jojoDiagonalWipe 0.56s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes jojoDiagonalWipe {
+    0% {
+        left: -130%;
+    }
+    42% {
+        left: -8%;
+    }
+    62% {
+        left: 2%;
+    }
+    100% {
+        left: 135%;
+    }
+}
+
+.scene-wipe-content {
+    transform: skewX(18deg);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.8rem;
+    background: rgba(15, 23, 42, 0.85);
+    border: 2px solid var(--gold);
+    border-radius: var(--radius-full);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+.scene-wipe-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--gold);
+    flex-shrink: 0;
+}
+
+.scene-wipe-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.scene-wipe-sub {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-transform: uppercase;
+}
+
+.scene-wipe-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 0.03em;
+}
+
+/* Tab Panel Entrance Animation */
+.tab-panel.active {
+    display: block;
+    animation: tabSceneEnter 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tabSceneEnter {
+    0% {
+        opacity: 0;
+        transform: translateY(14px) scale(0.99);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Question Slide Next / Prev Animations */
+.question-card.q-slide-next {
+    animation: qSlideFromRight 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.question-card.q-slide-prev {
+    animation: qSlideFromLeft 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes qSlideFromRight {
+    0% {
+        opacity: 0.35;
+        transform: translateX(24px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes qSlideFromLeft {
+    0% {
+        opacity: 0.35;
+        transform: translateX(-24px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Staggered Option Items Cascade */
+.options-list .option-item {
+    animation: optionCascadeIn 0.26s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.options-list .option-item:nth-child(1) { animation-delay: 0.02s; }
+.options-list .option-item:nth-child(2) { animation-delay: 0.05s; }
+.options-list .option-item:nth-child(3) { animation-delay: 0.08s; }
+.options-list .option-item:nth-child(4) { animation-delay: 0.11s; }
+
+@keyframes optionCascadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Heaven's Door Explanation Unfold */
+.explanation-card.show {
+    display: block;
+    animation: heavenDoorOpen 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: top center;
+}
+
+@keyframes heavenDoorOpen {
+    0% {
+        opacity: 0;
+        transform: translateY(-8px) scaleY(0.92);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+}
+
+/* Stand Character Summon Animation */
+.mascot-dialogue-card.char-summon-anim {
+    animation: standSummonPulse 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mascot-dialogue-card.char-summon-anim .mascot-avatar-svg {
+    animation: standAvatarPop 0.42s cubic-bezier(0.17, 0.89, 0.32, 1.35);
+}
+
+@keyframes standSummonPulse {
+    0% {
+        transform: scale(0.985);
+        box-shadow: 0 0 0 0 var(--primary-glow);
+    }
+    50% {
+        transform: scale(1.008);
+        box-shadow: 0 0 25px 2px var(--primary-glow);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes standAvatarPop {
+    0% {
+        transform: scale(0.75) rotate(-8deg);
+        opacity: 0.5;
+    }
+    60% {
+        transform: scale(1.08) rotate(3deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
 @media (max-width: 768px) {
     .header-container { flex-direction: column; align-items: stretch; gap: 0.75rem; }
     .header-actions { justify-content: space-between; flex-wrap: wrap; }

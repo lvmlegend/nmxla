@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@600;700;800;900&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=jojo3">
+    <link rel="stylesheet" href="style.css?v=jojo4">
 </head>
 <body>
 
@@ -17,6 +17,19 @@
 
     <!-- Golden Star Confetti Canvas -->
     <canvas id="confetti-canvas"></canvas>
+
+    <!-- JoJo Eyecatch Scene Transition Curtain Overlay -->
+    <div class="scene-transition-overlay" id="scene-transition-overlay">
+        <div class="scene-wipe-slash">
+            <div class="scene-wipe-content">
+                <div class="scene-wipe-avatar" id="scene-wipe-avatar"></div>
+                <div class="scene-wipe-text">
+                    <span class="scene-wipe-sub" id="scene-wipe-sub">★ JOJO'S STAND EYECATCH ★</span>
+                    <span class="scene-wipe-title" id="scene-wipe-title">LUYỆN TẬP STAND • ゴゴゴ</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- App Header -->
     <header class="app-header">
@@ -149,6 +162,9 @@
                         <button class="sfx-chip" onclick="window.soundEngine.playStreak(); spawnJoJoSfx('IL VENTO D\'ORO 3:45!! 🎹🔥');" title="Nghe thử bản Solo Piano 3:45 khi đạt Combo">
                             <span>🎹</span> Solo Combo (3:45 Riff)
                         </button>
+                        <button class="sfx-chip" onclick="triggerSceneTransition('★ JOJO EYECATCH ★', 'CHUYỂN CẢNH STAND • ゴゴゴ');" title="Xem thử hiệu ứng & âm thanh chuyển cảnh JoJo Eyecatch">
+                            <span>🎬</span> Chuyển Cảnh (Eyecatch)
+                        </button>
                     </div>
                 </div>
             </div>
@@ -156,7 +172,7 @@
             <div class="arena-layout">
                 <!-- Left: Question Card -->
                 <div class="question-container">
-                    <div class="question-card anime-card">
+                    <div class="question-card anime-card" id="practice-question-card">
                         <div class="card-top-bar">
                             <span class="chapter-tag" id="p-chapter-tag">Part 1: Tổng quan</span>
                             
@@ -319,7 +335,7 @@
                 <div class="arena-layout">
                     <!-- Left: Question Card -->
                     <div class="question-container">
-                        <div class="question-card anime-card">
+                        <div class="question-card anime-card" id="exam-question-card">
                             <div class="card-top-bar">
                                 <span class="chapter-tag" id="e-chapter-tag">Part</span>
                                 
@@ -576,10 +592,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="questions.js?v=jojo3"></script>
-    <script src="glossary.js?v=jojo3"></script>
-    <script src="characters.js?v=jojo3"></script>
-    <script src="audio.js?v=jojo3"></script>
-    <script src="app.js?v=jojo3"></script>
+    <script src="questions.js?v=jojo4"></script>
+    <script src="glossary.js?v=jojo4"></script>
+    <script src="characters.js?v=jojo4"></script>
+    <script src="audio.js?v=jojo4"></script>
+    <script src="app.js?v=jojo4"></script>
 </body>
 </html>

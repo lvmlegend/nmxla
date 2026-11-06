@@ -186,8 +186,8 @@ function selectCharacterMode(mode) {
     }
 
     renderCharacterSelectorBar();
-    updateCompanionDisplay('idle');
-    if (window.soundEngine) window.soundEngine.playClick();
+    updateCompanionDisplay('idle', null, true);
+    if (window.soundEngine) window.soundEngine.playCharacterSummon(state.activeCharId);
 }
 
 function rotateCharacterIfNeeded() {
@@ -199,7 +199,7 @@ function rotateCharacterIfNeeded() {
     }
 }
 
-function updateCompanionDisplay(moodType = 'idle', extra = null) {
+function updateCompanionDisplay(moodType = 'idle', extra = null, animateSummon = false) {
     if (!window.JOJO_CHARACTERS) return;
     const charObj = window.JOJO_CHARACTERS[state.activeCharId] || window.JOJO_CHARACTERS.jotaro;
 
@@ -211,7 +211,14 @@ function updateCompanionDisplay(moodType = 'idle', extra = null) {
     const statsPill = document.getElementById('mascot-stats-pill');
     const speechEl = document.getElementById('mascot-speech-text');
 
-    if (banner) banner.style.setProperty('--char-accent', charObj.accent);
+    if (banner) {
+        banner.style.setProperty('--char-accent', charObj.accent);
+        if (animateSummon || state.selectedCharMode === 'random') {
+            banner.classList.remove('char-summon-anim');
+            void banner.offsetWidth;
+            banner.classList.add('char-summon-anim');
+        }
+    }
     if (avatarContainer) avatarContainer.innerHTML = charObj.svg;
     if (nameEl) nameEl.textContent = charObj.name;
     if (standEl) {
@@ -235,6 +242,50 @@ function updateCompanionDisplay(moodType = 'idle', extra = null) {
         if (moodBadge) moodBadge.textContent = `COMBO x${extra}!! 🔥`;
         if (speechEl) speechEl.textContent = charObj.quotes.streak;
     }
+}
+
+// ==========================================================================
+// JoJo Scene Transition Curtain & Question Slide Animations
+// ==========================================================================
+
+let sceneTransitionTimeout = null;
+
+function triggerSceneTransition(subTitle = '★ JOJO STAND EYECATCH ★', mainTitle = 'CHUYỂN CẢNH • ゴゴゴ', customCharId = null) {
+    if (window.soundEngine) {
+        window.soundEngine.playTabTransition();
+    }
+
+    const overlay = document.getElementById('scene-transition-overlay');
+    const avatarEl = document.getElementById('scene-wipe-avatar');
+    const subEl = document.getElementById('scene-wipe-sub');
+    const titleEl = document.getElementById('scene-wipe-title');
+    if (!overlay) return;
+
+    const cId = customCharId || state.activeCharId || 'jotaro';
+    const charObj = (window.JOJO_CHARACTERS && window.JOJO_CHARACTERS[cId]) ? window.JOJO_CHARACTERS[cId] : null;
+    if (avatarEl && charObj) {
+        avatarEl.innerHTML = charObj.svg;
+    }
+    if (subEl) subEl.textContent = subTitle;
+    if (titleEl) titleEl.textContent = mainTitle;
+
+    if (sceneTransitionTimeout) clearTimeout(sceneTransitionTimeout);
+    overlay.classList.remove('active');
+    void overlay.offsetWidth;
+    overlay.classList.add('active');
+
+    sceneTransitionTimeout = setTimeout(() => {
+        overlay.classList.remove('active');
+    }, 580);
+}
+
+function animateQuestionCard(cardId, direction = 'next') {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+
+    card.classList.remove('q-slide-next', 'q-slide-prev');
+    void card.offsetWidth;
+    card.classList.add(direction === 'prev' ? 'q-slide-prev' : 'q-slide-next');
 }
 
 // ==========================================================================
@@ -323,13 +374,23 @@ function updateVolumeIcon(pct) {
 // Tabs Navigation
 // ==========================================================================
 
-function switchTab(tabId) {
+const TAB_TITLES = {
+    practice:  { sub: '★ STAND TRAINING ARENA ★', title: 'LUYỆN TẬP 400 CÂU • ゴゴゴ', charId: null },
+    exam:      { sub: '★ STARDUST CRUSADERS EXAM ★', title: 'ĐẤU TRƯỜNG TÍNH GIỜ ⏱️', charId: 'dio' },
+    chapters:  { sub: '★ 8 PARTS ADVENTURE ★', title: '8 CHƯƠNG XỬ LÝ ẢNH 📚', charId: 'giorno' },
+    bookmarks: { sub: '★ JOESTAR TARGET LIST ★', title: 'CÂU ĐÃ LƯU & CÂU SAI 🎯', charId: 'josuke' },
+    search:    { sub: '★ HERMIT PURPLE DIVINATION ★', title: 'TRA CỨU KHO 400 CÂU 🔍', charId: 'joseph' },
+    glossary:  { sub: '★ ROHAN KISHIBE ARCHIVE ★', title: 'SỔ TAY HEAVEN\'S DOOR 📖', charId: 'rohan' }
+};
+
+function switchTab(tabId, skipSceneWipe = false) {
     if (state.exam.active && tabId !== 'exam') {
         if (!confirm('Bạn đang trong bài thi thử tính giờ! Rời đi sẽ tạm dừng bài thi. Tiếp tục?')) {
             return;
         }
     }
 
+    const isChangingTab = state.activeTab !== tabId;
     state.activeTab = tabId;
 
     document.querySelectorAll('.nav-tab').forEach(btn => {
@@ -347,7 +408,12 @@ function switchTab(tabId) {
         renderPracticeMatrix();
     }
 
-    if (window.soundEngine) window.soundEngine.playClick();
+    if (!skipSceneWipe && isChangingTab) {
+        const info = TAB_TITLES[tabId] || { sub: '★ JOJO XLA ★', title: 'CHUYỂN CẢNH • ゴゴゴ', charId: null };
+        triggerSceneTransition(info.sub, info.title, info.charId);
+    } else if (window.soundEngine) {
+        window.soundEngine.playClick();
+    }
 }
 
 // ==========================================================================
@@ -500,7 +566,8 @@ function prevPracticeQuestion() {
     if (state.practice.currentIndex > 0) {
         state.practice.currentIndex--;
         renderPracticeQuestion();
-        window.soundEngine.playClick();
+        animateQuestionCard('practice-question-card', 'prev');
+        if (window.soundEngine) window.soundEngine.playQuestionSlide('prev');
     }
 }
 
@@ -508,7 +575,8 @@ function nextPracticeQuestion() {
     if (state.practice.currentIndex < state.practice.list.length - 1) {
         state.practice.currentIndex++;
         renderPracticeQuestion();
-        window.soundEngine.playClick();
+        animateQuestionCard('practice-question-card', 'next');
+        if (window.soundEngine) window.soundEngine.playQuestionSlide('next');
     }
 }
 
@@ -525,7 +593,8 @@ function toggleShufflePractice() {
     state.practice.currentIndex = 0;
     renderPracticeQuestion();
     renderPracticeMatrix();
-    window.soundEngine.playClick();
+    animateQuestionCard('practice-question-card', 'next');
+    if (window.soundEngine) window.soundEngine.playQuestionSlide('next');
 }
 
 function toggleCurrentBookmark() {
@@ -594,9 +663,11 @@ function renderPracticeMatrix() {
         if (isStarred) btn.classList.add('flagged');
 
         btn.onclick = () => {
+            const dir = idx >= state.practice.currentIndex ? 'next' : 'prev';
             state.practice.currentIndex = idx;
             renderPracticeQuestion();
-            window.soundEngine.playClick();
+            animateQuestionCard('practice-question-card', dir);
+            if (window.soundEngine) window.soundEngine.playQuestionSlide(dir);
         };
 
         grid.appendChild(btn);
@@ -648,8 +719,7 @@ function startExam() {
     startExamTimer();
     renderExamQuestion();
     renderExamMatrix();
-    spawnJoJoSfx('STAND PROUD!! ⭐');
-    window.soundEngine.playClick();
+    triggerSceneTransition('★ STARDUST CRUSADERS EXAM ★', `BẮT ĐẦU THI ${count} CÂU (${minutes} PHÚT)!`, 'jotaro');
 }
 
 function startExamTimer() {
@@ -750,7 +820,8 @@ function prevExamQuestion() {
     if (state.exam.currentIndex > 0) {
         state.exam.currentIndex--;
         renderExamQuestion();
-        window.soundEngine.playClick();
+        animateQuestionCard('exam-question-card', 'prev');
+        if (window.soundEngine) window.soundEngine.playQuestionSlide('prev');
     }
 }
 
@@ -758,7 +829,8 @@ function nextExamQuestion() {
     if (state.exam.currentIndex < state.exam.questions.length - 1) {
         state.exam.currentIndex++;
         renderExamQuestion();
-        window.soundEngine.playClick();
+        animateQuestionCard('exam-question-card', 'next');
+        if (window.soundEngine) window.soundEngine.playQuestionSlide('next');
     }
 }
 
@@ -995,10 +1067,11 @@ function practiceChapter(chId, guardianCharId) {
     const chQuestions = state.allQuestions.filter(q => q.chapterId === chId);
     if (guardianCharId && window.JOJO_CHARACTERS && window.JOJO_CHARACTERS[guardianCharId]) {
         state.activeCharId = guardianCharId;
-        updateCompanionDisplay('idle');
+        updateCompanionDisplay('idle', null, true);
     }
     initPractice(`chapter-${chId}`, chQuestions);
-    switchTab('practice');
+    switchTab('practice', true);
+    triggerSceneTransition(`★ JOJO PART ${chId} ★`, `ÔN TẬP CHƯƠNG ${chId} (${chQuestions.length} CÂU)`, guardianCharId);
 }
 
 // ==========================================================================
