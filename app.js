@@ -1,15 +1,19 @@
 /**
- * JOJO'S BIZARRE ADVENTURE • ジョジョの奇妙な冒険 - Main Logic
+ * JOJO'S BIZARRE ADVENTURE • EYE-FRIENDLY & INTERACTIVE CHARACTER CREW LOGIC
  * Features:
- * - Floating Menacing Katakana Aura ("ゴゴゴゴ" & "ドドドド") Canvas
- * - ZA WARUDO! Time-Stop Visual Screen Distortion on Wrong Answer
- * - On-Screen Manga Action Popups ("ORA ORA!", "DI MOLTO!", "OH MY GOD!")
- * - Stand Companion Reactions (Jotaro, Giorno, Joseph, Rohan)
+ * - 6 Interactive JoJo Stand Users (Jotaro, Giorno, Josuke, DIO, Rohan, Joseph) + Random Rotation
+ * - Custom SVG Anime Portraits & Stand Stats
+ * - Eye-friendly subtle Menacing Katakana ("ゴゴゴ") ambient canvas
+ * - Zero glaring screen inversions, high readability question/answer flow
  */
+
+const CHARACTER_ORDER = ['jotaro', 'giorno', 'josuke', 'dio', 'rohan', 'joseph'];
 
 // Global State
 const state = {
     allQuestions: [],
+    selectedCharMode: 'random', // 'jotaro' | 'giorno' | 'josuke' | 'dio' | 'rohan' | 'joseph' | 'random'
+    activeCharId: 'jotaro',
     practice: {
         list: [],
         currentIndex: 0,
@@ -34,7 +38,7 @@ const state = {
     bookmarks: new Set(),
     wrongQuestions: new Set(),
     activeTab: 'practice',
-    sakuraEnabled: true, // Menacing ゴゴゴゴ Aura enabled
+    sakuraEnabled: true,
     lastNonZeroVolume: 0.75
 };
 
@@ -51,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadSavedData();
+    initCharacterCrewUI();
     initPractice();
     renderChapters();
     renderGlossary();
@@ -75,6 +80,12 @@ function loadSavedData() {
     document.documentElement.setAttribute('data-theme', savedTheme);
     const themeIcon = document.getElementById('theme-icon');
     if (themeIcon) themeIcon.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+    const savedChar = localStorage.getItem('xla_char_mode');
+    if (savedChar) {
+        state.selectedCharMode = savedChar;
+        state.activeCharId = savedChar === 'random' ? 'jotaro' : savedChar;
+    }
 
     const savedSakura = localStorage.getItem('xla_sakura');
     if (savedSakura !== null) {
@@ -112,7 +123,122 @@ function saveState() {
 }
 
 // ==========================================================================
-// JoJo Visual Action Effects (SFX Popups & ZA WARUDO Screen Invert)
+// JoJo Character Crew System (6 Stand Users + Random Mode)
+// ==========================================================================
+
+function initCharacterCrewUI() {
+    const bar = document.getElementById('char-selector-bar');
+    if (!bar || !window.JOJO_CHARACTERS) return;
+
+    // Populate Rohan avatar in explanation box
+    const rohanExpAvatar = document.getElementById('rohan-exp-avatar');
+    if (rohanExpAvatar && window.JOJO_CHARACTERS.rohan) {
+        rohanExpAvatar.innerHTML = window.JOJO_CHARACTERS.rohan.svg;
+    }
+
+    renderCharacterSelectorBar();
+    updateCompanionDisplay('idle');
+}
+
+function renderCharacterSelectorBar() {
+    const bar = document.getElementById('char-selector-bar');
+    if (!bar || !window.JOJO_CHARACTERS) return;
+
+    bar.innerHTML = `<span class="char-selector-label">👥 Chọn Đồng Đội Stand:</span>`;
+
+    // Random rotation button
+    const randomBtn = document.createElement('button');
+    randomBtn.className = `char-pill ${state.selectedCharMode === 'random' ? 'active' : ''}`;
+    randomBtn.style.setProperty('--char-accent', '#fbbf24');
+    randomBtn.innerHTML = `
+        <span class="char-pill-avatar" style="font-size:0.9rem; background:rgba(251,191,36,0.18);">🎲</span>
+        <span>Đổi Ngẫu Nhiên (Cả Đội)</span>
+    `;
+    randomBtn.onclick = () => selectCharacterMode('random');
+    bar.appendChild(randomBtn);
+
+    // Individual character pills
+    CHARACTER_ORDER.forEach(charId => {
+        const c = window.JOJO_CHARACTERS[charId];
+        if (!c) return;
+
+        const btn = document.createElement('button');
+        btn.className = `char-pill ${state.selectedCharMode === charId ? 'active' : ''}`;
+        btn.style.setProperty('--char-accent', c.accent);
+        btn.innerHTML = `
+            <span class="char-pill-avatar">${c.svg}</span>
+            <span>${c.name.split(' ')[0]}</span>
+        `;
+        btn.onclick = () => selectCharacterMode(charId);
+        bar.appendChild(btn);
+    });
+}
+
+function selectCharacterMode(mode) {
+    state.selectedCharMode = mode;
+    localStorage.setItem('xla_char_mode', mode);
+
+    if (mode === 'random') {
+        const randomIdx = Math.floor(Math.random() * CHARACTER_ORDER.length);
+        state.activeCharId = CHARACTER_ORDER[randomIdx];
+    } else {
+        state.activeCharId = mode;
+    }
+
+    renderCharacterSelectorBar();
+    updateCompanionDisplay('idle');
+    if (window.soundEngine) window.soundEngine.playClick();
+}
+
+function rotateCharacterIfNeeded() {
+    if (state.selectedCharMode === 'random') {
+        const others = CHARACTER_ORDER.filter(id => id !== state.activeCharId);
+        state.activeCharId = others[Math.floor(Math.random() * others.length)];
+    } else {
+        state.activeCharId = state.selectedCharMode;
+    }
+}
+
+function updateCompanionDisplay(moodType = 'idle', extra = null) {
+    if (!window.JOJO_CHARACTERS) return;
+    const charObj = window.JOJO_CHARACTERS[state.activeCharId] || window.JOJO_CHARACTERS.jotaro;
+
+    const banner = document.getElementById('mascot-banner');
+    const avatarContainer = document.getElementById('mascot-avatar-svg');
+    const nameEl = document.getElementById('mascot-char-name');
+    const standEl = document.getElementById('mascot-stand-name');
+    const moodBadge = document.getElementById('mascot-mood');
+    const statsPill = document.getElementById('mascot-stats-pill');
+    const speechEl = document.getElementById('mascot-speech-text');
+
+    if (banner) banner.style.setProperty('--char-accent', charObj.accent);
+    if (avatarContainer) avatarContainer.innerHTML = charObj.svg;
+    if (nameEl) nameEl.textContent = charObj.name;
+    if (standEl) {
+        standEl.textContent = `• ${charObj.stand}`;
+        standEl.style.color = charObj.accent;
+    }
+    if (statsPill) statsPill.textContent = charObj.stats;
+
+    if (moodType === 'idle') {
+        if (moodBadge) moodBadge.textContent = charObj.part;
+        if (speechEl) speechEl.textContent = charObj.quotes.idle;
+    } else if (moodType === 'correct') {
+        if (moodBadge) moodBadge.textContent = 'Đòn đánh chuẩn xác! ⭐';
+        const list = charObj.quotes.correct;
+        if (speechEl) speechEl.textContent = list[Math.floor(Math.random() * list.length)];
+    } else if (moodType === 'wrong') {
+        if (moodBadge) moodBadge.textContent = 'Cần xem lại định nghĩa 📖';
+        const list = charObj.quotes.wrong;
+        if (speechEl) speechEl.textContent = list[Math.floor(Math.random() * list.length)];
+    } else if (moodType === 'streak') {
+        if (moodBadge) moodBadge.textContent = `COMBO x${extra}!! 🔥`;
+        if (speechEl) speechEl.textContent = charObj.quotes.streak;
+    }
+}
+
+// ==========================================================================
+// Gentle Action Popup Badge
 // ==========================================================================
 
 function spawnJoJoSfx(text) {
@@ -123,15 +249,6 @@ function spawnJoJoSfx(text) {
     setTimeout(() => {
         if (el.parentNode) el.parentNode.removeChild(el);
     }, 900);
-}
-
-function triggerZaWarudoVisual() {
-    document.body.classList.remove('za-warudo-flash');
-    void document.body.offsetWidth; // trigger reflow
-    document.body.classList.add('za-warudo-flash');
-    setTimeout(() => {
-        document.body.classList.remove('za-warudo-flash');
-    }, 600);
 }
 
 // ==========================================================================
@@ -208,7 +325,7 @@ function updateVolumeIcon(pct) {
 
 function switchTab(tabId) {
     if (state.exam.active && tabId !== 'exam') {
-        if (!confirm('Bạn đang trong Đấu Trường Stand! Rời đi sẽ tạm dừng trận đấu. Tiếp tục?')) {
+        if (!confirm('Bạn đang trong bài thi thử tính giờ! Rời đi sẽ tạm dừng bài thi. Tiếp tục?')) {
             return;
         }
     }
@@ -234,7 +351,7 @@ function switchTab(tabId) {
 }
 
 // ==========================================================================
-// Practice Mode Logic & JoJo Stand Reactions
+// Practice Mode Logic
 // ==========================================================================
 
 function initPractice(filter = 'all', questionsSubset = null) {
@@ -253,7 +370,7 @@ function initPractice(filter = 'all', questionsSubset = null) {
 function renderPracticeQuestion() {
     const list = state.practice.list;
     if (!list || list.length === 0) {
-        document.getElementById('p-q-title').innerHTML = '<span style="color:var(--text-muted)">Không có mục tiêu nào trong khu vực này.</span>';
+        document.getElementById('p-q-title').innerHTML = '<span style="color:var(--text-muted)">Không có câu hỏi nào trong danh mục này.</span>';
         document.getElementById('p-options-list').innerHTML = '';
         document.getElementById('p-explanation-card').classList.remove('show');
         return;
@@ -263,10 +380,10 @@ function renderPracticeQuestion() {
     const q = list[idx];
 
     document.getElementById('p-chapter-tag').textContent = q.chapterName || `Part ${q.chapterId}`;
-    document.getElementById('p-q-number').textContent = `Câu ${idx + 1} / ${list.length} (Gốc: Câu ${q.id})`;
+    document.getElementById('p-q-number').textContent = `Câu ${idx + 1} / ${list.length} (Mã gốc: Câu ${q.id})`;
 
     const totalAnswered = Object.keys(state.practice.answeredMap).length;
-    document.getElementById('p-q-answered-count').textContent = `Đã hạ: ${totalAnswered} / ${state.allQuestions.length}`;
+    document.getElementById('p-q-answered-count').textContent = `Đã làm: ${totalAnswered} / ${state.allQuestions.length}`;
 
     const progressPct = ((idx + 1) / list.length) * 100;
     document.getElementById('p-progress-bar').style.width = `${progressPct}%`;
@@ -316,8 +433,8 @@ function renderPracticeQuestion() {
     if (answeredInfo) {
         expCard.classList.add('show');
         expText.innerHTML = `
-            <p><strong>ĐÁP ÁN CHUẨN: [${q.answer}]</strong> — ${q.options[q.answer]}</p>
-            <p style="margin-top: 0.4rem; color: var(--text-secondary);">${q.explanation || ''}</p>
+            <p><strong>Đáp án đúng: [${q.answer}]</strong> — ${q.options[q.answer]}</p>
+            <p style="margin-top: 0.35rem; color: var(--text-secondary);">${q.explanation || ''}</p>
         `;
     } else {
         expCard.classList.remove('show');
@@ -338,30 +455,31 @@ function selectPracticeAnswer(q, selectedOpt) {
         isCorrect: isCorrect
     };
 
+    rotateCharacterIfNeeded();
+
     if (isCorrect) {
         state.practice.streak++;
 
         if (state.practice.streak > 1 && state.practice.streak % 5 === 0) {
             window.soundEngine.playStreak();
             triggerConfetti();
-            spawnJoJoSfx(`ORA RUSH x${state.practice.streak}!! 🎹🔥`);
-            updateMascotMood('streak', state.practice.streak);
+            spawnJoJoSfx(`COMBO x${state.practice.streak}!! 🎹🔥`);
+            updateCompanionDisplay('streak', state.practice.streak);
         } else {
             window.soundEngine.playCorrect();
-            const cries = ['ORA ORA!! 👊⭐', 'YES! I AM!! 🔥', 'DI MOLTO!! 🐞✨', 'STAR FINGER!! ⭐'];
+            const cries = ['ORA ORA!! 👊⭐', 'DI MOLTO!! 🐞✨', 'GURETO DAZE!! 💎', 'NICEU!! 👍✨'];
             spawnJoJoSfx(cries[Math.floor(Math.random() * cries.length)]);
-            updateMascotMood('correct');
+            updateCompanionDisplay('correct');
         }
 
         state.wrongQuestions.delete(q.id);
     } else {
         state.practice.streak = 0;
         window.soundEngine.playWrong();
-        triggerZaWarudoVisual();
-        const wrongCries = ['ZA WARUDO!! ⏱️🛑', 'OH MY GOD!! 😱', 'HORY SHIIIT!! 💥', 'WRYYYYYY!! 🧛‍♂️'];
+        const wrongCries = ['ZA WARUDO!! ⏱️', 'OH MY GOD!! 😱', 'YARE YARE... ⭐'];
         spawnJoJoSfx(wrongCries[Math.floor(Math.random() * wrongCries.length)]);
         state.wrongQuestions.add(q.id);
-        updateMascotMood('wrong');
+        updateCompanionDisplay('wrong');
     }
 
     saveState();
@@ -375,41 +493,6 @@ function selectPracticeAnswer(q, selectedOpt) {
                 nextPracticeQuestion();
             }
         }, 1150);
-    }
-}
-
-function updateMascotMood(type, extra = null) {
-    const avatar = document.getElementById('mascot-avatar-emoji');
-    const mood = document.getElementById('mascot-mood');
-    const speech = document.getElementById('mascot-speech-text');
-    if (!avatar || !speech) return;
-
-    if (type === 'correct') {
-        avatar.textContent = '⭐👊';
-        mood.textContent = 'ORA ORA ORA!! ⭐';
-        const msgs = [
-            '"ORA ORA ORA!! Chính xác tuyệt đối! Tốc độ phản xạ của ngươi ngang ngửa 『Star Platinum』 đấy!"',
-            '"YES! I AM!! Đòn đánh hoàn hảo! Giorno đang gảy piano ăn mừng cho ngươi kìa! 🐞🎹"',
-            '"DI MOLTO!! Tuyệt vời lắm Stand User, không kẻ địch nào qua mắt được ngươi!"'
-        ];
-        speech.textContent = msgs[Math.floor(Math.random() * msgs.length)];
-    } else if (type === 'wrong') {
-        avatar.textContent = '⏱️🧛';
-        mood.textContent = 'ZA WARUDO!! 🛑';
-        const msgs = [
-            '"OH MY GOD!! DIO vừa dùng 『The World』 dừng thời gian làm ngươi chọn nhầm rồi! Đọc ngay 『Heaven\'s Door』 bên dưới để phá giải!"',
-            '"Yare Yare Daze... Đừng nóng vội! Hãy nhìn vào định nghĩa gốc bên dưới để ghi nhớ năng lực của câu hỏi này!"',
-            '"HORY SHIIIT!! Bị trúng đòn của Stand địch rồi! Nhưng Giorno sẽ dùng 『Gold Experience』 hồi phục lại cho ngươi ngay!"'
-        ];
-        speech.textContent = msgs[Math.floor(Math.random() * msgs.length)];
-    } else if (type === 'streak') {
-        avatar.textContent = '🐞👑';
-        mood.textContent = `REQUIEM x${extra}!! 🔥`;
-        speech.textContent = `"KOREGA REQUIEM DA!! Chuỗi ${extra} câu đúng liên tiếp! Tiếng đàn Piano 3:45 của Giorno đã vang lên, không ai cản nổi ngươi nữa!! 🎹🔥"`;
-    } else if (type === 'exam_done') {
-        avatar.textContent = '🏆🎸';
-        mood.textContent = 'ARRIVEDERCI! ◄';
-        speech.textContent = `"Yare Yare... Ngươi đã hoàn thành trận quyết đấu! Một chiến thắng xứng tầm Stand Master thực thụ! ⭐"`;
     }
 }
 
@@ -534,7 +617,7 @@ function filterMatrix() {
 }
 
 // ==========================================================================
-// Exam Mode (Đấu Trường Thời Gian)
+// Exam Mode (Thi Thử Tính Giờ)
 // ==========================================================================
 
 function selectExamPreset(cardElement) {
@@ -579,7 +662,7 @@ function startExamTimer() {
 
         if (state.exam.timeRemaining <= 0) {
             clearInterval(state.exam.timerInterval);
-            alert('MADE IN HEAVEN! Thời gian đã hết! Hệ thống sẽ tự động phán quyết điểm số.');
+            alert('Hết giờ làm bài! Hệ thống sẽ tự động thu bài và chấm điểm.');
             finishExam();
         }
     }, 1000);
@@ -730,9 +813,9 @@ function confirmSubmitExam() {
     const total = state.exam.questions.length;
     const unanswered = total - answeredCount;
 
-    let msg = `Bạn đã tung đòn ${answeredCount}/${total} câu.`;
-    if (unanswered > 0) msg += ` Còn ${unanswered} mục tiêu chưa chọn!`;
-    msg += ' Bạn có chắc muốn kết thúc trận đấu (ARRIVEDERCI) ngay không?';
+    let msg = `Bạn đã làm ${answeredCount}/${total} câu.`;
+    if (unanswered > 0) msg += ` Còn ${unanswered} câu chưa chọn đáp án!`;
+    msg += ' Bạn có chắc chắn muốn nộp bài ngay không?';
 
     if (confirm(msg)) finishExam();
 }
@@ -789,10 +872,9 @@ function finishExam() {
         badge.textContent = 'B-RANK: CRAZY DIAMOND 💎';
     } else {
         badge.className = 'result-badge poor';
-        badge.textContent = 'CẦN TU LUYỆN HAMON & STAND! 💪';
+        badge.textContent = 'CẦN ÔN TẬP THÊM CÁC CÂU SAI! 💪';
     }
 
-    updateMascotMood('exam_done');
     spawnJoJoSfx('◄ TO BE CONTINUED...');
     window.soundEngine.playVictory();
     triggerConfetti();
@@ -839,24 +921,24 @@ function backToExamSetup() {
 }
 
 function confirmExitExam() {
-    if (confirm('Bạn có muốn dùng tuyệt chiêu NIGERUNDAYO (Rút lui) và quay lại chọn đề không?')) {
+    if (confirm('Bạn có muốn thoát bài thi hiện tại và quay lại màn hình chọn đề không?')) {
         backToExamSetup();
     }
 }
 
 // ==========================================================================
-// Chapters Tab (8 Parts)
+// Chapters Tab (8 Parts with Character Guardians)
 // ==========================================================================
 
 const CHAPTER_DEFS = [
-    { id: 1, name: 'Part 1: Tổng quan & Khái niệm cơ bản', desc: 'Nhiễu ngẫu nhiên, hệ thống, mức xám, số hóa, điểm ảnh, biến dạng ảnh.' },
-    { id: 2, name: 'Part 2: Thu nhận & Biểu diễn màu, Định dạng ảnh', desc: 'Mô hình RGB, CMY, HSV, HSL, Vector, Raster, Bayer, 3-CCD, BMP, RAW, TIFF, PCX.' },
-    { id: 3, name: 'Part 3: Tiền xử lý, Lọc & Nâng cao chất lượng ảnh', desc: 'Lọc trung bình, trung vị, Wiener, đảo, Dãn độ tương phản, Histogram, Phép nhân chập.' },
-    { id: 4, name: 'Part 4: Phát hiện biên & Hình thái học ảnh', desc: 'Gradient, Sobel, Prewitt, Canny, Laplace, Co/Giãn/Mở/Đóng, Trích biên.' },
-    { id: 5, name: 'Part 5: Phân vùng ảnh (Segmentation)', desc: 'Ngưỡng, Đẳng điệu, Tam giác, Đối xứng nền, Texture, Tách/Hợp vùng, Phát triển vùng.' },
-    { id: 6, name: 'Part 6: Nhận dạng ảnh & Phân lớp', desc: 'Có giám sát, Không giám sát, K-means, KNN, ISODATA, Hopfield, Kohonen.' },
-    { id: 7, name: 'Part 7: Nén dữ liệu ảnh & Chuẩn JPEG', desc: 'RLE, Huffman, LZW, JPEG DCT, Quét Zig-Zag, Kim tự tháp, Fractal.' },
-    { id: 8, name: 'Part 8: Chuẩn đầu ra & Tác phong học tập', desc: '10 câu hỏi chuẩn mực thái độ, giờ giảng, tự đánh giá và tích lũy kiến thức học phần.' }
+    { id: 1, charId: 'joseph', name: 'Part 1: Tổng quan & Khái niệm cơ bản', desc: 'Nhiễu ngẫu nhiên, hệ thống, mức xám, số hóa, điểm ảnh, biến dạng ảnh.' },
+    { id: 2, charId: 'josuke', name: 'Part 2: Thu nhận & Biểu diễn màu, Định dạng ảnh', desc: 'Mô hình RGB, CMY, HSV, HSL, Vector, Raster, Bayer, 3-CCD, BMP, RAW, TIFF, PCX.' },
+    { id: 3, charId: 'giorno', name: 'Part 3: Tiền xử lý, Lọc & Nâng cao chất lượng ảnh', desc: 'Lọc trung bình, trung vị, Wiener, đảo, Dãn độ tương phản, Histogram, Phép nhân chập.' },
+    { id: 4, charId: 'jotaro', name: 'Part 4: Phát hiện biên & Hình thái học ảnh', desc: 'Gradient, Sobel, Prewitt, Canny, Laplace, Co/Giãn/Mở/Đóng, Trích biên.' },
+    { id: 5, charId: 'rohan', name: 'Part 5: Phân vùng ảnh (Segmentation)', desc: 'Ngưỡng, Đẳng điệu, Tam giác, Đối xứng nền, Texture, Tách/Hợp vùng, Phát triển vùng.' },
+    { id: 6, charId: 'dio', name: 'Part 6: Nhận dạng ảnh & Phân lớp', desc: 'Có giám sát, Không giám sát, K-means, KNN, ISODATA, Hopfield, Kohonen.' },
+    { id: 7, charId: 'giorno', name: 'Part 7: Nén dữ liệu ảnh & Chuẩn JPEG', desc: 'RLE, Huffman, LZW, JPEG DCT, Quét Zig-Zag, Kim tự tháp, Fractal.' },
+    { id: 8, charId: 'jotaro', name: 'Part 8: Chuẩn đầu ra & Tác phong học tập', desc: '10 câu hỏi chuẩn mực thái độ, giờ giảng, tự đánh giá và tích lũy kiến thức học phần.' }
 ];
 
 function renderChapters() {
@@ -870,29 +952,38 @@ function renderChapters() {
         const correctInCh = answeredInCh.filter(q => state.practice.answeredMap[q.id].isCorrect);
         const pct = chQuestions.length > 0 ? Math.round((correctInCh.length / chQuestions.length) * 100) : 0;
 
+        const charObj = window.JOJO_CHARACTERS ? window.JOJO_CHARACTERS[ch.charId] : null;
+        const guardianHtml = charObj ? `
+            <div class="chapter-guardian">
+                <div class="chapter-guardian-avatar">${charObj.svg}</div>
+                <span>Đồng hành: <strong style="color:${charObj.accent}">${charObj.name}</strong> • ${charObj.stand}</span>
+            </div>
+        ` : '';
+
         const card = document.createElement('div');
         card.className = 'chapter-card';
         card.innerHTML = `
             <div class="chapter-card-header">
                 <span class="chapter-number">★ JOJO PART ${ch.id}</span>
-                <span class="chapter-qcount">${chQuestions.length} Mục tiêu</span>
+                <span class="chapter-qcount">${chQuestions.length} câu hỏi</span>
             </div>
             <div class="chapter-title">${ch.name}</div>
-            <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.4;">${ch.desc}</p>
+            <p style="font-size:0.86rem; color:var(--text-secondary); line-height:1.5;">${ch.desc}</p>
+            ${guardianHtml}
             
-            <div style="margin-top: 0.5rem;">
-                <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:800; color:var(--gold); margin-bottom:4px;">
-                    <span>Tiến độ Chinh phục</span>
-                    <span>${correctInCh.length}/${chQuestions.length} (${pct}%)</span>
+            <div style="margin-top: 0.25rem;">
+                <div style="display:flex; justify-content:space-between; font-size:0.76rem; font-weight:700; color:var(--text-secondary); margin-bottom:4px;">
+                    <span>Tiến độ hoàn thành</span>
+                    <span style="color:var(--gold);">${correctInCh.length}/${chQuestions.length} (${pct}%)</span>
                 </div>
-                <div class="progress-strip" style="margin-bottom:0.75rem; height:7px;">
+                <div class="progress-strip" style="margin-bottom:0.5rem; height:6px;">
                     <div class="progress-bar-fill" style="width:${pct}%"></div>
                 </div>
             </div>
 
             <div class="chapter-footer">
-                <button class="btn btn-primary btn-sm" onclick="practiceChapter(${ch.id})">
-                    👊 Xuất kích (ORA!)
+                <button class="btn btn-primary btn-sm" onclick="practiceChapter(${ch.id}, '${ch.charId}')">
+                    👊 Ôn tập chương này
                 </button>
             </div>
         `;
@@ -900,8 +991,12 @@ function renderChapters() {
     });
 }
 
-function practiceChapter(chId) {
+function practiceChapter(chId, guardianCharId) {
     const chQuestions = state.allQuestions.filter(q => q.chapterId === chId);
+    if (guardianCharId && window.JOJO_CHARACTERS && window.JOJO_CHARACTERS[guardianCharId]) {
+        state.activeCharId = guardianCharId;
+        updateCompanionDisplay('idle');
+    }
     initPractice(`chapter-${chId}`, chQuestions);
     switchTab('practice');
 }
@@ -916,7 +1011,7 @@ function renderBookmarksTab() {
     document.getElementById('starred-count-val').textContent = starList.length;
 
     if (starList.length === 0) {
-        starContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Chưa có câu hỏi nào được gắn Ngôi Sao Joestar.</p>';
+        starContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Chưa có câu hỏi nào được gắn Ngôi Sao.</p>';
     } else {
         starContainer.innerHTML = '';
         starList.forEach(q => {
@@ -930,7 +1025,7 @@ function renderBookmarksTab() {
     document.getElementById('wrong-count-val').textContent = wrongList.length;
 
     if (wrongList.length === 0) {
-        wrongContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">DI MOLTO! Chưa có kẻ địch nào hạ gục được bạn!</p>';
+        wrongContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Tuyệt vời! Bạn chưa có câu hỏi nào làm sai!</p>';
     } else {
         wrongContainer.innerHTML = '';
         wrongList.forEach(q => {
@@ -942,13 +1037,13 @@ function renderBookmarksTab() {
 
 function createQuestionSummaryItem(q) {
     const div = document.createElement('div');
-    div.style.cssText = 'background:var(--bg-surface); border:2px solid var(--border-subtle); border-radius:4px; padding:0.75rem 1rem; display:flex; justify-content:space-between; align-items:center; gap:0.5rem; cursor:pointer; box-shadow: 3px 3px 0px #000;';
+    div.style.cssText = 'background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:0.75rem 1rem; display:flex; justify-content:space-between; align-items:center; gap:0.75rem; cursor:pointer;';
     div.innerHTML = `
-        <div style="flex:1;">
-            <div style="font-size:0.75rem; color:var(--gold); font-weight:900;">Câu ${q.id} • ${q.chapterName}</div>
-            <div style="font-size:0.92rem; font-weight:800; color:var(--text-primary); margin-top:2px; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${q.question}</div>
+        <div style="flex:1; min-width:0;">
+            <div style="font-size:0.75rem; color:var(--gold); font-weight:700;">Câu ${q.id} • ${q.chapterName}</div>
+            <div style="font-size:0.92rem; font-weight:600; color:var(--text-primary); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${q.question}</div>
         </div>
-        <button class="btn btn-secondary btn-sm" style="flex-shrink:0;">Tái đấu</button>
+        <button class="btn btn-secondary btn-sm" style="flex-shrink:0;">Xem câu</button>
     `;
     div.onclick = () => {
         initPractice('single', [q]);
@@ -962,7 +1057,7 @@ function practiceFilterQuestions(filterType) {
     if (filterType === 'wrong') {
         subset = state.allQuestions.filter(q => state.wrongQuestions.has(q.id));
         if (subset.length === 0) {
-            alert('DI MOLTO! Bạn chưa có câu nào làm sai!');
+            alert('Tuyệt vời! Bạn chưa có câu nào làm sai!');
             return;
         }
     } else if (filterType === 'starred') {
@@ -1016,29 +1111,29 @@ function renderSearchBank() {
         card.style.padding = '1.25rem';
 
         card.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
                 <span class="chapter-tag" style="font-size:0.75rem;">Câu ${q.id} • ${q.chapterName}</span>
-                <button class="btn btn-secondary btn-sm" onclick="practiceSingleQuestion(${q.id})">👊 Đánh câu này</button>
+                <button class="btn btn-secondary btn-sm" onclick="practiceSingleQuestion(${q.id})">👊 Luyện câu này</button>
             </div>
-            <div style="font-size:1.1rem; font-weight:900; margin-bottom:0.75rem; color:var(--text-primary);">${q.question}</div>
+            <div style="font-size:1.08rem; font-weight:700; margin-bottom:0.85rem; color:var(--text-primary);">${q.question}</div>
             
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:0.75rem; font-size:0.92rem; font-weight:700;">
-                <div style="padding:0.5rem 0.75rem; border-radius:4px; background:${q.answer === 'A' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:2px solid ${q.answer === 'A' ? 'var(--success)' : 'var(--border-subtle)'};">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.55rem; margin-bottom:0.85rem; font-size:0.92rem; font-weight:500;">
+                <div style="padding:0.55rem 0.8rem; border-radius:8px; background:${q.answer === 'A' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:1.5px solid ${q.answer === 'A' ? 'var(--success)' : 'var(--border-color)'};">
                     <strong>A.</strong> ${q.options.A || ''}
                 </div>
-                <div style="padding:0.5rem 0.75rem; border-radius:4px; background:${q.answer === 'B' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:2px solid ${q.answer === 'B' ? 'var(--success)' : 'var(--border-subtle)'};">
+                <div style="padding:0.55rem 0.8rem; border-radius:8px; background:${q.answer === 'B' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:1.5px solid ${q.answer === 'B' ? 'var(--success)' : 'var(--border-color)'};">
                     <strong>B.</strong> ${q.options.B || ''}
                 </div>
-                <div style="padding:0.5rem 0.75rem; border-radius:4px; background:${q.answer === 'C' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:2px solid ${q.answer === 'C' ? 'var(--success)' : 'var(--border-subtle)'};">
+                <div style="padding:0.55rem 0.8rem; border-radius:8px; background:${q.answer === 'C' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:1.5px solid ${q.answer === 'C' ? 'var(--success)' : 'var(--border-color)'};">
                     <strong>C.</strong> ${q.options.C || ''}
                 </div>
-                <div style="padding:0.5rem 0.75rem; border-radius:4px; background:${q.answer === 'D' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:2px solid ${q.answer === 'D' ? 'var(--success)' : 'var(--border-subtle)'};">
+                <div style="padding:0.55rem 0.8rem; border-radius:8px; background:${q.answer === 'D' ? 'var(--success-bg)' : 'var(--bg-surface)'}; border:1.5px solid ${q.answer === 'D' ? 'var(--success)' : 'var(--border-color)'};">
                     <strong>D.</strong> ${q.options.D || ''}
                 </div>
             </div>
 
-            <div style="font-size:0.88rem; font-weight:700; color:var(--text-secondary); background:rgba(255,215,0,0.08); padding:0.6rem 0.85rem; border-radius:4px; border:1.5px solid var(--gold);">
-                📖 <strong>『Heaven's Door』:</strong> ${q.explanation}
+            <div style="font-size:0.88rem; color:var(--text-secondary); background:rgba(16, 185, 129, 0.08); padding:0.65rem 0.9rem; border-radius:8px; border-left:3px solid #10b981;">
+                📖 <strong style="color:#10b981;">『Heaven's Door』:</strong> ${q.explanation}
             </div>
         `;
         container.appendChild(card);
@@ -1100,7 +1195,7 @@ function renderGlossary() {
         card.innerHTML = `
             <div class="glossary-term">
                 <span>★ ${item.concept}</span>
-                <button class="icon-btn btn-sm" title="Truy tìm câu hỏi liên quan" onclick="searchRelatedQuestion('${item.concept}')">
+                <button class="icon-btn btn-sm" title="Tìm câu hỏi liên quan" onclick="searchRelatedQuestion('${item.concept}')">
                     <span>🔍</span>
                 </button>
             </div>
@@ -1124,7 +1219,7 @@ function searchRelatedQuestion(term) {
 }
 
 // ==========================================================================
-// Header Stats
+// Header Stats & Theme
 // ==========================================================================
 
 function updateHeaderStats() {
@@ -1147,7 +1242,6 @@ function toggleTheme() {
 
     const themeIcon = document.getElementById('theme-icon');
     if (themeIcon) themeIcon.textContent = newTheme === 'dark' ? '🌙' : '☀️';
-    spawnJoJoSfx('COLOR SHIFT!! 🎨');
     if (window.soundEngine) window.soundEngine.playClick();
 }
 
@@ -1160,7 +1254,7 @@ function closeShortcutsModal() {
 }
 
 function confirmResetProgress() {
-    if (confirm('KILLER QUEEN: BITES THE DUST! Bạn có muốn quay ngược thời gian và đặt lại toàn bộ lịch sử làm bài không? (Các câu gắn Sao Joestar vẫn được giữ lại).')) {
+    if (confirm('KILLER QUEEN: BITES THE DUST! Bạn có muốn đặt lại toàn bộ lịch sử làm bài không? (Các câu gắn Sao vẫn được giữ lại).')) {
         state.practice.answeredMap = {};
         state.practice.streak = 0;
         state.wrongQuestions.clear();
@@ -1170,12 +1264,12 @@ function confirmResetProgress() {
         renderPracticeQuestion();
         renderPracticeMatrix();
         renderChapters();
-        spawnJoJoSfx('BITES THE DUST!! 💣⏪');
+        spawnJoJoSfx('BITES THE DUST!! ⏪');
     }
 }
 
 // ==========================================================================
-// JoJo Menacing Katakana Aura Canvas ("ゴゴゴゴ" & "ドドドド")
+// Subtle Ambient Menacing Katakana Canvas ("ゴゴゴ")
 // ==========================================================================
 
 let menacingAnimationId = null;
@@ -1193,20 +1287,20 @@ function initMenacingCanvas() {
         height = canvas.height = window.innerHeight;
     });
 
-    const symbols = ['ゴ', 'ゴ', 'ゴ', 'ド', 'ド', '★'];
-    const colors = ['#ff007f', '#ffd700', '#a855f7', '#00f5d4'];
-    const count = 24;
+    const symbols = ['ゴ', 'ゴ', 'ド', '★'];
+    const colors = ['#8b5cf6', '#38bdf8', '#fbbf24'];
+    const count = 14; // Subtle, non-distracting count
     const particles = [];
 
     for (let i = 0; i < count; i++) {
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            size: Math.random() * 20 + 18,
-            speedY: -(Math.random() * 1.1 + 0.5), // float upwards menacingly
+            size: Math.random() * 14 + 14,
+            speedY: -(Math.random() * 0.6 + 0.25),
             char: symbols[Math.floor(Math.random() * symbols.length)],
             color: colors[Math.floor(Math.random() * colors.length)],
-            opacity: Math.random() * 0.35 + 0.15,
+            opacity: Math.random() * 0.08 + 0.04, // Very gentle opacity (4% - 12%)
             shakeOffset: Math.random() * 100
         });
     }
@@ -1222,9 +1316,7 @@ function initMenacingCanvas() {
 
         particles.forEach(p => {
             p.y += p.speedY;
-            // Subtle menacing vibration
-            const jitterX = Math.sin(Date.now() * 0.03 + p.shakeOffset) * 1.8;
-            const jitterY = Math.cos(Date.now() * 0.04 + p.shakeOffset) * 1.2;
+            const jitterX = Math.sin(Date.now() * 0.015 + p.shakeOffset) * 0.8;
 
             if (p.y < -40) {
                 p.y = height + 30;
@@ -1233,13 +1325,9 @@ function initMenacingCanvas() {
 
             ctx.save();
             ctx.globalAlpha = p.opacity;
-            ctx.font = `900 italic ${p.size}px 'Outfit', sans-serif`;
+            ctx.font = `800 ${p.size}px 'Outfit', sans-serif`;
             ctx.fillStyle = p.color;
-            ctx.shadowColor = '#000000';
-            ctx.shadowBlur = 0;
-            ctx.shadowOffsetX = 3;
-            ctx.shadowOffsetY = 3;
-            ctx.fillText(p.char, p.x + jitterX, p.y + jitterY);
+            ctx.fillText(p.char, p.x + jitterX, p.y);
             ctx.restore();
         });
 
@@ -1254,7 +1342,6 @@ function toggleSakura() {
     localStorage.setItem('xla_sakura', state.sakuraEnabled.toString());
     const btn = document.getElementById('sakura-toggle-btn');
     if (btn) btn.classList.toggle('active', state.sakuraEnabled);
-    if (state.sakuraEnabled) spawnJoJoSfx('ゴゴゴゴ!!');
     if (window.soundEngine) window.soundEngine.playClick();
 }
 
@@ -1271,17 +1358,17 @@ function triggerConfetti() {
     canvas.height = window.innerHeight;
 
     const particles = [];
-    const colors = ['#ffd700', '#ff007f', '#00f5d4', '#a855f7', '#ffffff'];
+    const colors = ['#fbbf24', '#8b5cf6', '#38bdf8', '#10b981', '#f43f5e'];
 
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 65; i++) {
         particles.push({
             x: canvas.width / 2,
             y: canvas.height / 2,
-            r: Math.random() * 7 + 4,
+            r: Math.random() * 6 + 3,
             color: colors[Math.floor(Math.random() * colors.length)],
-            vx: (Math.random() - 0.5) * 20,
-            vy: (Math.random() - 0.7) * 20,
-            gravity: 0.38,
+            vx: (Math.random() - 0.5) * 16,
+            vy: (Math.random() - 0.7) * 16,
+            gravity: 0.35,
             opacity: 1
         });
     }
@@ -1294,7 +1381,7 @@ function triggerConfetti() {
             p.x += p.vx;
             p.y += p.vy;
             p.vy += p.gravity;
-            p.opacity -= 0.015;
+            p.opacity -= 0.016;
 
             if (p.opacity > 0) {
                 alive = true;

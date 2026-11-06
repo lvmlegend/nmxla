@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOJO'S XLA • ジョジョの奇妙な冒険 - Ôn Luyện Xử Lý Ảnh Bizarre Adventure</title>
-    <!-- Google Fonts: Outfit, Nunito, Inter -->
+    <title>JOJO'S XLA • Ôn Luyện 400 Câu Xử Lý Ảnh</title>
+    <!-- Google Fonts: Inter, Nunito, Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Nunito:wght@700;800;900&family=Outfit:ital,wght@0,700;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=jojo2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@600;700;800;900&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=jojo3">
 </head>
 <body>
 
-    <!-- Menacing Katakana (ゴゴゴゴ) Canvas Background -->
+    <!-- Subtle Menacing Katakana (ゴゴゴゴ) Canvas Background -->
     <canvas id="sakura-canvas"></canvas>
 
     <!-- Golden Star Confetti Canvas -->
@@ -28,21 +28,21 @@
                     <span class="avatar-sparkle">ゴゴ</span>
                 </div>
                 <div class="brand-text">
-                    <h1>JOJO'S XLA <span class="anime-sub">「奇妙な画像処理」</span></h1>
-                    <p><span class="status-indicator">★</span> STAND USER TRAINING: 400 CÂU XỬ LÝ ẢNH ゴゴゴ</p>
+                    <h1>JOJO'S XLA <span class="anime-sub">• ジョジョの奇妙な冒険</span></h1>
+                    <p><span class="status-indicator">★</span> Đồng hành cùng 6 Stand Master chinh phục 400 câu Xử Lý Ảnh</p>
                 </div>
             </a>
 
             <!-- Header Stats -->
             <div class="header-stats">
-                <div class="stat-pill streak" title="Chuỗi đòn ORA liên tiếp (Stand Rush Combo)">
+                <div class="stat-pill streak" title="Chuỗi trả lời đúng liên tiếp (Stand Rush Combo)">
                     <span class="pill-icon">👊</span>
-                    <span class="pill-label">ORA RUSH:</span>
+                    <span class="pill-label">Combo:</span>
                     <span id="streak-counter">0</span>
                 </div>
-                <div class="stat-pill accuracy" title="Độ chính xác của Stand (Precision)">
+                <div class="stat-pill accuracy" title="Độ chính xác (Precision)">
                     <span class="pill-icon">⭐</span>
-                    <span class="pill-label">PRECISION:</span>
+                    <span class="pill-label">Chính xác:</span>
                     <span id="accuracy-rate">0%</span>
                 </div>
             </div>
@@ -61,12 +61,12 @@
                 </div>
 
                 <!-- Menacing Aura (ゴゴゴ) Toggle -->
-                <button class="icon-btn active" id="sakura-toggle-btn" title="Bật/Tắt sát khí JoJo (ゴゴゴゴ)" onclick="toggleSakura()">
-                    <span style="font-weight:900; font-style:italic;">ゴ</span>
+                <button class="icon-btn active" id="sakura-toggle-btn" title="Bật/Tắt hiệu ứng nền (ゴゴゴゴ)" onclick="toggleSakura()">
+                    <span style="font-weight:900;">ゴ</span>
                 </button>
 
-                <!-- Theme Toggle (Golden Wind Dark / Morioh Yellow Light) -->
-                <button class="icon-btn" id="theme-btn" title="Đổi màu Araki Color Shift (Golden Wind / Morioh Yellow)" onclick="toggleTheme()">
+                <!-- Theme Toggle (Dark / Light) -->
+                <button class="icon-btn" id="theme-btn" title="Đổi giao diện Tối / Sáng dịu mắt" onclick="toggleTheme()">
                     <span id="theme-icon">🌙</span>
                 </button>
 
@@ -90,20 +90,20 @@
                 <span>👊</span> Luyện Tập Stand
             </button>
             <button class="nav-tab" data-tab="exam" onclick="switchTab('exam')">
-                <span>⏱️</span> Đấu Trường Thời Gian
+                <span>⏱️</span> Thi Thử Tính Giờ
             </button>
             <button class="nav-tab" data-tab="chapters" onclick="switchTab('chapters')">
-                <span>📚</span> 8 Phần (Parts)
+                <span>📚</span> 8 Chương (Parts)
             </button>
             <button class="nav-tab" data-tab="bookmarks" onclick="switchTab('bookmarks')">
-                <span>⭐</span> Đã Lưu & Kẻ Địch
+                <span>⭐</span> Đã Lưu & Câu Sai
                 <span class="tab-badge" id="bookmark-badge">0</span>
             </button>
             <button class="nav-tab" data-tab="search" onclick="switchTab('search')">
                 <span>🔍</span> Kho 400 Câu
             </button>
             <button class="nav-tab" data-tab="glossary" onclick="switchTab('glossary')">
-                <span>📖</span> [Heaven's Door] 151 Từ
+                <span>📖</span> Sổ Tay 151 Từ
             </button>
         </div>
     </nav>
@@ -115,29 +115,38 @@
              TAB 1: Luyện Tập Tự Do (Practice)
              ============================================================== -->
         <section class="tab-panel active" id="panel-practice">
-            <!-- Stand Master Companion Box (Jotaro Kujo & Giorno Giovanna) -->
+            <!-- Character Crew Selector Bar (Choose Companion) -->
+            <div class="char-selector-bar" id="char-selector-bar">
+                <!-- Populated dynamically with Jotaro, Giorno, Josuke, DIO, Rohan, Joseph + Random -->
+            </div>
+
+            <!-- Interactive JoJo Character Companion Card -->
             <div class="mascot-dialogue-card" id="mascot-banner">
                 <div class="mascot-avatar-wrap">
-                    <div class="mascot-avatar" id="mascot-avatar-emoji">⭐👊</div>
+                    <div class="mascot-avatar-svg" id="mascot-avatar-svg"></div>
                 </div>
                 <div class="mascot-content">
-                    <div class="mascot-name">
-                        <span>JOTARO KUJO • 『STAR PLATINUM』</span>
-                        <span class="mascot-mood-badge" id="mascot-mood">Yare Yare Daze... ⭐</span>
+                    <div class="mascot-header-row">
+                        <div class="mascot-name">
+                            <span id="mascot-char-name">Jotaro Kujo</span>
+                            <span class="mascot-stand-tag" id="mascot-stand-name">• 『Star Platinum』</span>
+                            <span class="mascot-mood-badge" id="mascot-mood">Part 3: Stardust Crusaders</span>
+                        </div>
+                        <span class="mascot-stats-pill" id="mascot-stats-pill">PWR: A • SPD: A • PRC: A</span>
                     </div>
                     <div class="mascot-speech" id="mascot-speech-text">
-                        "Yare Yare Daze... Nào Stand User! Hãy dùng trí tuệ và tốc độ của 『Star Platinum』 để nghiền nát 400 câu hỏi Xử Lý Ảnh trước khi DIO kịp dừng thời gian! ゴゴゴゴ"
+                        「Yare Yare Daze...」 Bình tĩnh quan sát từng từ khóa trong câu hỏi. Tốc độ và độ chính xác của 『Star Platinum』 sẽ giúp cậu vượt qua hết.
                     </div>
                     <!-- JoJo Sound Test Controls -->
-                    <div style="display: flex; gap: 0.55rem; align-items: center; margin-top: 0.65rem; flex-wrap: wrap;">
-                        <span style="font-size: 0.78rem; color: var(--gold); font-weight: 900; text-transform: uppercase;">🎵 TEST STAND SFX:</span>
-                        <button class="btn btn-sm" style="background: var(--success-bg); color: var(--success); border: 2px solid var(--success); padding: 0.2rem 0.75rem; font-size: 0.76rem;" onclick="window.soundEngine.playCorrect(); spawnJoJoSfx('GIORNO PIANO! 🐞✨');" title="Nghe thử nhạc Giorno's Theme khi chọn Đúng">
+                    <div class="sfx-test-bar">
+                        <span class="sfx-test-label">🎵 Nghe thử âm thanh:</span>
+                        <button class="sfx-chip" onclick="window.soundEngine.playCorrect(); spawnJoJoSfx('GIORNO PIANO! 🐞✨');" title="Nghe thử nhạc Giorno's Theme khi chọn Đúng">
                             <span>🐞</span> Âm Đúng (Giorno's Theme)
                         </button>
-                        <button class="btn btn-sm" style="background: var(--danger-bg); color: var(--danger); border: 2px solid var(--danger); padding: 0.2rem 0.75rem; font-size: 0.76rem;" onclick="window.soundEngine.playWrong(); triggerZaWarudoVisual(); spawnJoJoSfx('ZA WARUDO!! ⏱️🛑');" title="Nghe thử hiệu ứng DIO Dừng Thời Gian khi chọn Sai">
+                        <button class="sfx-chip" onclick="window.soundEngine.playWrong(); spawnJoJoSfx('ZA WARUDO!! ⏱️');" title="Nghe thử hiệu ứng DIO Dừng Thời Gian khi chọn Sai">
                             <span>⏱️</span> Âm Sai (ZA WARUDO!)
                         </button>
-                        <button class="btn btn-sm" style="background: rgba(255, 215, 0, 0.15); color: var(--gold); border: 2px solid var(--gold); padding: 0.2rem 0.75rem; font-size: 0.76rem;" onclick="window.soundEngine.playStreak(); spawnJoJoSfx('IL VENTO D\'ORO 3:45!! 🎹🔥');" title="Nghe thử bản Solo Piano 3:45 khi đạt Combo">
+                        <button class="sfx-chip" onclick="window.soundEngine.playStreak(); spawnJoJoSfx('IL VENTO D\'ORO 3:45!! 🎹🔥');" title="Nghe thử bản Solo Piano 3:45 khi đạt Combo">
                             <span>🎹</span> Solo Combo (3:45 Riff)
                         </button>
                     </div>
@@ -174,12 +183,12 @@
 
                         <div class="question-meta">
                             <span id="p-q-number" class="badge-qnum">Câu 1 / 400</span>
-                            <span id="p-q-answered-count">Đã hạ: 0/400</span>
+                            <span id="p-q-answered-count">Đã hoàn thành: 0/400</span>
                         </div>
 
                         <!-- Question Text -->
                         <div class="question-title" id="p-q-title">
-                            Đang triệu hồi câu hỏi...
+                            Đang tải câu hỏi...
                         </div>
 
                         <!-- Options List -->
@@ -187,13 +196,14 @@
                             <!-- Injected dynamically -->
                         </div>
 
-                        <!-- Explanation Card -->
+                        <!-- Explanation Card with Rohan Kishibe Avatar -->
                         <div class="explanation-card" id="p-explanation-card">
                             <div class="explanation-header">
-                                <span>📖</span> 『HEAVEN'S DOOR』 • PHÂN TÍCH ĐỊNH NGHĨA CỐT LÕI
+                                <div class="rohan-exp-avatar" id="rohan-exp-avatar"></div>
+                                <span>ROHAN KISHIBE • 『HEAVEN'S DOOR』 GIẢI THÍCH CỐT LÕI</span>
                             </div>
                             <div class="explanation-body" id="p-explanation-text">
-                                Giải thích đáp án sẽ hiển thị tại đây sau khi tung đòn.
+                                Giải thích đáp án sẽ hiển thị tại đây sau khi bạn chọn phương án.
                             </div>
                         </div>
 
@@ -201,17 +211,17 @@
                         <div class="arena-actions">
                             <div style="display: flex; gap: 0.65rem;">
                                 <button class="btn btn-secondary" id="p-prev-btn" onclick="prevPracticeQuestion()">
-                                    <span>←</span> Lùi lại
+                                    <span>←</span> Câu trước
                                 </button>
                                 <button class="btn btn-primary" id="p-next-btn" onclick="nextPracticeQuestion()">
-                                    Tiến lên (ORA!) <span>→</span>
+                                    Câu tiếp theo <span>→</span>
                                 </button>
                             </div>
 
                             <div style="display: flex; align-items: center; gap: 0.75rem;">
                                 <label class="checkbox-label">
                                     <input type="checkbox" id="auto-next-toggle" checked>
-                                    <span>Tự lướt tiếp khi trúng đòn ⭐</span>
+                                    <span>Tự chuyển câu khi chọn đúng ⭐</span>
                                 </label>
                             </div>
                         </div>
@@ -222,19 +232,19 @@
                 <aside class="sidebar-card anime-sidebar">
                     <div class="sidebar-header">
                         <div class="sidebar-title">
-                            <span>🗺️</span> Radar Stand
+                            <span>🗺️</span> Danh Sách Câu Hỏi
                         </div>
                         <select id="matrix-filter" onchange="filterMatrix(this.value)">
                             <option value="all">Tất cả (400)</option>
-                            <option value="unanswered">Chưa đánh</option>
-                            <option value="correct">Đã hạ (ORA!) ⭐</option>
-                            <option value="wrong">Trúng đòn ❌</option>
+                            <option value="unanswered">Chưa làm</option>
+                            <option value="correct">Đã đúng ⭐</option>
+                            <option value="wrong">Làm sai ❌</option>
                             <option value="starred">Dấu Sao ★</option>
                         </select>
                     </div>
 
                     <div class="matrix-legend">
-                        <div class="legend-item"><span class="legend-dot unanswered"></span> Chưa đánh</div>
+                        <div class="legend-item"><span class="legend-dot unanswered"></span> Chưa làm</div>
                         <div class="legend-item"><span class="legend-dot correct"></span> Đúng</div>
                         <div class="legend-item"><span class="legend-dot wrong"></span> Sai</div>
                         <div class="legend-item"><span class="legend-dot flagged"></span> Sao ★</div>
@@ -256,50 +266,50 @@
             <div id="exam-setup-view" class="setup-container anime-card">
                 <div class="setup-header">
                     <div class="setup-badge">★ STARDUST CRUSADERS EXAM ★</div>
-                    <h2>ĐẤU TRƯỜNG SINH TỬ XỬ LÝ ẢNH</h2>
-                    <p>Chọn cấp độ thử thách để kiểm tra năng lực Stand của bạn trước kỳ thi chính thức!</p>
+                    <h2>Đấu Trường Thi Thử Xử Lý Ảnh</h2>
+                    <p style="color: var(--text-secondary);">Chọn cấu hình đề thi thử để rèn luyện tốc độ và tâm lý phòng thi</p>
                 </div>
 
                 <div class="setup-grid">
                     <div class="preset-card selected" data-q="20" data-time="15" onclick="selectExamPreset(this)">
                         <div class="preset-tag">Part 1: Phantom Blood</div>
                         <div class="preset-title">20 Câu</div>
-                        <div class="preset-desc">15 Phút • Tốc chiến</div>
+                        <div class="preset-desc">15 Phút • Khởi động</div>
                     </div>
                     <div class="preset-card" data-q="40" data-time="30" onclick="selectExamPreset(this)">
                         <div class="preset-tag hot">Part 3: Chuẩn Thi 🔥</div>
                         <div class="preset-title">40 Câu</div>
-                        <div class="preset-desc">30 Phút • Đề thi chính thức</div>
+                        <div class="preset-desc">30 Phút • Đề thi tiêu chuẩn</div>
                     </div>
                     <div class="preset-card" data-q="50" data-time="40" onclick="selectExamPreset(this)">
                         <div class="preset-tag">Part 4: Unbreakable</div>
                         <div class="preset-title">50 Câu</div>
-                        <div class="preset-desc">40 Phút • Toàn diện</div>
+                        <div class="preset-desc">40 Phút • Ôn tập sâu</div>
                     </div>
                     <div class="preset-card" data-q="60" data-time="45" onclick="selectExamPreset(this)">
                         <div class="preset-tag">Part 5: Golden Wind 🐞</div>
                         <div class="preset-title">60 Câu</div>
-                        <div class="preset-desc">45 Phút • Cấp Capo</div>
+                        <div class="preset-desc">45 Phút • Thử thách cao</div>
                     </div>
                     <div class="preset-card" data-q="400" data-time="180" onclick="selectExamPreset(this)">
                         <div class="preset-tag boss">FINAL BOSS: DIO 👑</div>
                         <div class="preset-title">400 Câu</div>
-                        <div class="preset-desc">180 Phút • Over Heaven</div>
+                        <div class="preset-desc">180 Phút • Toàn bộ ngân hàng</div>
                     </div>
                 </div>
 
                 <div class="rules-box">
-                    <p>⭐ <strong>Luật Giao Đấu Stand:</strong></p>
+                    <p style="color: var(--text-primary); font-weight: 700;">⭐ Quy tắc phòng thi:</p>
                     <ul>
-                        <li>Hệ thống rút ngẫu nhiên câu hỏi từ kho tàng 400 câu Xử Lý Ảnh.</li>
-                        <li>Khi thời gian về 0, 『Made In Heaven』 sẽ tự động thu bài và phán quyết điểm số.</li>
-                        <li>Sau khi nộp bài, âm nhạc <em>To Be Continued (Roundabout)</em> vang lên và mở khóa chế độ phân tích từng câu sai!</li>
+                        <li>Hệ thống rút ngẫu nhiên câu hỏi từ ngân hàng 400 câu Xử Lý Ảnh.</li>
+                        <li>Khi thời gian đếm ngược về 0, hệ thống sẽ tự động thu bài và chấm điểm.</li>
+                        <li>Sau khi nộp bài, bạn có thể xem lại chi tiết đáp án và giải thích cho từng câu.</li>
                     </ul>
                 </div>
 
                 <div style="text-align: center;">
                     <button class="btn btn-primary anime-btn-main" onclick="startExam()">
-                        <span>👊</span> BẮT ĐẦU TRẬN ĐẤU (ORA!!)
+                        <span>👊</span> Bắt Đầu Làm Bài
                     </button>
                 </div>
             </div>
@@ -351,7 +361,7 @@
                                 </div>
 
                                 <button class="btn btn-success" onclick="confirmSubmitExam()">
-                                    <span>🏆</span> Nộp Bài (ARRIVEDERCI!)
+                                    <span>🏆</span> Nộp Bài Chấm Điểm
                                 </button>
                             </div>
                         </div>
@@ -361,7 +371,7 @@
                     <aside class="sidebar-card anime-sidebar">
                         <div class="sidebar-header">
                             <div class="sidebar-title">
-                                <span>📋</span> Mục Tiêu Trận Đấu
+                                <span>📋</span> Phiếu Trả Lời
                             </div>
                         </div>
 
@@ -376,7 +386,7 @@
                         </div>
 
                         <button class="btn btn-danger btn-sm" style="margin-top: auto;" onclick="confirmExitExam()">
-                            Rút lui (Nigerundayo!)
+                            Thoát bài thi
                         </button>
                     </aside>
                 </div>
@@ -386,8 +396,8 @@
             <div id="exam-result-view" style="display: none;">
                 <div class="result-card anime-card">
                     <div class="result-badge-top">◄ TO BE CONTINUED... 🎸</div>
-                    <h2 style="font-size: 2rem; font-weight: 900; font-style: italic; margin-bottom: 0.35rem; color: var(--gold);">PHÁN QUYẾT STAND MASTER</h2>
-                    <p style="color: var(--text-secondary);">Trận chiến kiểm tra năng lực Xử Lý Ảnh đã khép lại!</p>
+                    <h2 style="font-size: 1.85rem; font-weight: 800; margin-bottom: 0.35rem; color: var(--text-primary);">Kết Quả Bài Thi</h2>
+                    <p style="color: var(--text-secondary);">Bạn đã hoàn thành bài kiểm tra năng lực Xử Lý Ảnh!</p>
 
                     <div class="result-score-circle">
                         <div class="score-num" id="res-score-num">9.5</div>
@@ -399,27 +409,27 @@
                     <div class="result-stats-grid">
                         <div class="result-stat-box">
                             <div class="result-stat-num correct" id="res-stat-correct">38</div>
-                            <div class="result-stat-label">Đòn trúng đích (ORA!) ⭐</div>
+                            <div class="result-stat-label">Số câu đúng ⭐</div>
                         </div>
                         <div class="result-stat-box">
                             <div class="result-stat-num wrong" id="res-stat-wrong">2</div>
-                            <div class="result-stat-label">Trúng đòn (Muda!) ❌</div>
+                            <div class="result-stat-label">Số câu sai ❌</div>
                         </div>
                         <div class="result-stat-box">
                             <div class="result-stat-num time" id="res-stat-time">18:45</div>
-                            <div class="result-stat-label">Thời gian chiến đấu ⏱️</div>
+                            <div class="result-stat-label">Thời gian làm bài ⏱️</div>
                         </div>
                     </div>
 
                     <div class="result-actions">
                         <button class="btn btn-primary" onclick="reviewExamAnswers()">
-                            <span>🔍</span> Dùng [Moody Blues] Xem Lại Câu Sai
+                            <span>🔍</span> Xem Lại Đáp Án Chi Tiết
                         </button>
                         <button class="btn btn-secondary" onclick="restartSameExam()">
-                            <span>🔄</span> Tái Đấu Đề Này
+                            <span>🔄</span> Làm Lại Đề Này
                         </button>
                         <button class="btn btn-secondary" onclick="backToExamSetup()">
-                            <span>⚙️</span> Đổi Cấp Độ Khác
+                            <span>⚙️</span> Chọn Đề Khác
                         </button>
                     </div>
                 </div>
@@ -432,8 +442,8 @@
              ============================================================== -->
         <section class="tab-panel" id="panel-chapters">
             <div style="margin-bottom: 1.5rem;">
-                <h2 style="font-size: 1.7rem; font-weight: 900; font-style: italic; color: var(--gold); margin-bottom: 0.35rem;">8 PHẦN (PARTS) HÀNH TRÌNH XỬ LÝ ẢNH ⭐</h2>
-                <p style="color: var(--text-secondary);">Chinh phục từng chương trong ngân hàng 400 câu hỏi chuẩn bộ môn</p>
+                <h2 style="font-size: 1.55rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.3rem;">8 Chương (Parts) Môn Xử Lý Ảnh ⭐</h2>
+                <p style="color: var(--text-secondary);">Mỗi chương được bảo hộ bởi một Stand Master — Chọn chương bạn muốn ôn tập chuyên sâu</p>
             </div>
 
             <div class="chapters-grid" id="chapters-grid-container">
@@ -448,13 +458,13 @@
         <section class="tab-panel" id="panel-bookmarks">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                 <div>
-                    <h2 style="font-size: 1.7rem; font-weight: 900; font-style: italic; color: var(--gold); margin-bottom: 0.35rem;">DANH SÁCH MỤC TIÊU TRỌNG TÂM 🎯</h2>
-                    <p style="color: var(--text-secondary);">Các câu hỏi bạn đã gắn Ngôi Sao Joestar hoặc từng bị trúng đòn (làm sai)</p>
+                    <h2 style="font-size: 1.55rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.3rem;">Câu Hỏi Đã Lưu & Câu Từng Làm Sai 🎯</h2>
+                    <p style="color: var(--text-secondary);">Ôn tập lại các câu khó hoặc câu bạn từng chọn nhầm để nắm chắc 100%</p>
                 </div>
 
                 <div style="display: flex; gap: 0.65rem;">
                     <button class="btn btn-primary btn-sm" id="btn-practice-weak" onclick="practiceFilterQuestions('wrong')">
-                        👊 Phục thù các câu từng sai
+                        👊 Luyện các câu từng sai
                     </button>
                     <button class="btn btn-secondary btn-sm" id="btn-practice-starred" onclick="practiceFilterQuestions('starred')">
                         ⭐ Luyện câu đã gắn sao
@@ -466,9 +476,9 @@
                 <!-- Starred list -->
                 <div class="question-card anime-card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <h3 style="font-size: 1.15rem; font-weight: 900; color: var(--gold);">★ Dấu Sao Joestar (<span id="starred-count-val">0</span>)</h3>
+                        <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--gold);">★ Đã Gắn Ngôi Sao (<span id="starred-count-val">0</span>)</h3>
                     </div>
-                    <div id="starred-questions-list" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 500px; overflow-y: auto;">
+                    <div id="starred-questions-list" style="display: flex; flex-direction: column; gap: 0.55rem; max-height: 500px; overflow-y: auto;">
                         <p style="color: var(--text-muted); font-size: 0.9rem;">Chưa có câu hỏi nào được gắn sao.</p>
                     </div>
                 </div>
@@ -476,10 +486,10 @@
                 <!-- Wrong list -->
                 <div class="question-card anime-card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <h3 style="font-size: 1.15rem; font-weight: 900; color: var(--danger);">💥 Kẻ Địch Từng Đánh Bại Bạn (<span id="wrong-count-val">0</span>)</h3>
+                        <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--danger);">💥 Câu Từng Làm Sai (<span id="wrong-count-val">0</span>)</h3>
                     </div>
-                    <div id="wrong-questions-list" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 500px; overflow-y: auto;">
-                        <p style="color: var(--text-muted); font-size: 0.9rem;">DI MOLTO! Chưa có câu hỏi nào hạ gục được bạn!</p>
+                    <div id="wrong-questions-list" style="display: flex; flex-direction: column; gap: 0.55rem; max-height: 500px; overflow-y: auto;">
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Tuyệt vời! Bạn chưa có câu hỏi nào làm sai!</p>
                     </div>
                 </div>
             </div>
@@ -491,10 +501,10 @@
              ============================================================== -->
         <section class="tab-panel" id="panel-search">
             <div class="search-bar-wrapper anime-search">
-                <span style="font-size: 1.25rem;">🔍</span>
-                <input type="text" class="search-input" id="bank-search-input" placeholder="Dùng [Hermit Purple] truy tìm câu hỏi (ví dụ: 'nhiễu', 'bayer', 'canny', 'huffman', 'câu 45')..." oninput="handleBankSearch(this.value)">
+                <span style="font-size: 1.2rem;">🔍</span>
+                <input type="text" class="search-input" id="bank-search-input" placeholder="Nhập từ khóa câu hỏi hoặc đáp án (ví dụ: 'nhiễu', 'bayer', 'canny', 'huffman', 'câu 45')..." oninput="handleBankSearch(this.value)">
                 <select id="bank-chapter-filter" onchange="handleBankChapterFilter(this.value)">
-                    <option value="all">Tất cả các Part</option>
+                    <option value="all">Tất cả các Chương</option>
                     <option value="1">Part 1: Tổng quan</option>
                     <option value="2">Part 2: Màu sắc & Định dạng</option>
                     <option value="3">Part 3: Tiền xử lý & Nâng cao</option>
@@ -506,8 +516,8 @@
                 </select>
             </div>
 
-            <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem; font-weight: 800;">
-                Tìm thấy: <strong id="search-result-count" style="color: var(--gold);">400</strong> mục tiêu
+            <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.92rem; font-weight: 600;">
+                Tìm thấy: <strong id="search-result-count" style="color: var(--gold);">400</strong> câu hỏi
             </div>
 
             <div id="search-results-list" style="display: flex; flex-direction: column; gap: 1rem;">
@@ -521,12 +531,12 @@
              ============================================================== -->
         <section class="tab-panel" id="panel-glossary">
             <div class="search-bar-wrapper anime-search">
-                <span style="font-size: 1.25rem;">📖</span>
-                <input type="text" class="search-input" id="glossary-search-input" placeholder="Mở trang sách [Heaven's Door] tra cứu 151 thuật ngữ (ví dụ: 'Sobel', 'Wiener', 'RGB', 'DCT')..." oninput="handleGlossarySearch(this.value)">
+                <span style="font-size: 1.2rem;">📖</span>
+                <input type="text" class="search-input" id="glossary-search-input" placeholder="Tra cứu nhanh 151 khái niệm gốc trong bài giảng (ví dụ: 'Sobel', 'Wiener', 'RGB', 'DCT')..." oninput="handleGlossarySearch(this.value)">
             </div>
 
-            <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem; font-weight: 800;">
-                Sổ tay Rohan Kishibe: <strong id="glossary-count" style="color: var(--gold);">151</strong> định nghĩa gốc
+            <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.92rem; font-weight: 600;">
+                Sổ tay 『Heaven's Door』 của Rohan Kishibe: <strong id="glossary-count" style="color: var(--gold);">151</strong> thuật ngữ cốt lõi
             </div>
 
             <div class="glossary-grid" id="glossary-grid-container">
@@ -538,37 +548,38 @@
 
     <!-- App Footer -->
     <footer class="app-footer">
-        <p>★ JOJO'S BIZARRE IMAGE PROCESSING • ジョジョの奇妙な冒険 • ◄ TO BE CONTINUED... ★</p>
+        <p>★ JOJO'S BIZARRE IMAGE PROCESSING • Ôn luyện 400 câu Xử Lý Ảnh • ◄ TO BE CONTINUED... ★</p>
     </footer>
 
     <!-- Shortcuts Modal -->
     <div class="modal-backdrop" id="shortcuts-modal" onclick="closeShortcutsModal(event)">
         <div class="modal-box anime-card" onclick="event.stopPropagation()">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h3 style="font-size: 1.35rem; font-weight: 900; color: var(--gold);">⌨️ BẢNG ĐIỀU KHIỂN STAND NHANH</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">⌨️ Phím Tắt Nhanh</h3>
                 <button class="icon-btn btn-sm" onclick="closeShortcutsModal()">✕</button>
             </div>
             
-            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
-                <div class="shortcut-item"><span>Tung đòn chọn A / B / C / D</span> <div><kbd>A</kbd> <kbd>B</kbd> <kbd>C</kbd> <kbd>D</kbd> hoặc <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd></div></div>
+            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                <div class="shortcut-item"><span>Chọn đáp án A / B / C / D</span> <div><kbd>A</kbd> <kbd>B</kbd> <kbd>C</kbd> <kbd>D</kbd> hoặc <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd></div></div>
                 <div class="shortcut-item"><span>Câu kế tiếp</span> <div><kbd>→</kbd> hoặc <kbd>Space</kbd> / <kbd>Enter</kbd></div></div>
                 <div class="shortcut-item"><span>Câu trước đó</span> <div><kbd>←</kbd></div></div>
-                <div class="shortcut-item"><span>Gắn Ngôi Sao Joestar</span> <div><kbd>S</kbd></div></div>
-                <div class="shortcut-item"><span>Triệu hồi giọng đọc Stand</span> <div><kbd>R</kbd></div></div>
+                <div class="shortcut-item"><span>Lưu câu hỏi (Ngôi Sao)</span> <div><kbd>S</kbd></div></div>
+                <div class="shortcut-item"><span>Đọc câu hỏi bằng giọng nói</span> <div><kbd>R</kbd></div></div>
                 <div class="shortcut-item"><span>Bật / Tắt âm thanh</span> <div><kbd>M</kbd></div></div>
-                <div class="shortcut-item"><span>Mở bảng trợ giúp</span> <div><kbd>?</kbd></div></div>
+                <div class="shortcut-item"><span>Mở bảng phím tắt</span> <div><kbd>?</kbd></div></div>
             </div>
 
             <div style="margin-top: 1.5rem; text-align: right;">
-                <button class="btn btn-primary btn-sm" onclick="closeShortcutsModal()">YARE YARE DAZE! ⭐</button>
+                <button class="btn btn-primary btn-sm" onclick="closeShortcutsModal()">Đã hiểu ⭐</button>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <script src="questions.js?v=jojo2"></script>
-    <script src="glossary.js?v=jojo2"></script>
-    <script src="audio.js?v=jojo2"></script>
-    <script src="app.js?v=jojo2"></script>
+    <script src="questions.js?v=jojo3"></script>
+    <script src="glossary.js?v=jojo3"></script>
+    <script src="characters.js?v=jojo3"></script>
+    <script src="audio.js?v=jojo3"></script>
+    <script src="app.js?v=jojo3"></script>
 </body>
 </html>
